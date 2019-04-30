@@ -10,4 +10,4 @@ Features:
 - Fallout themed inventory graphics
 - Enlarged, scrollable inventory space 
 - Built-in 3x3 crafting grid in inventory 
-
+- Moderately okay compatability with other mods such as Inventory Tweaks (must be enabled in config) and Trashslot
