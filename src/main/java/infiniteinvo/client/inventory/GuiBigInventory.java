@@ -1,5 +1,9 @@
 package infiniteinvo.client.inventory;
 
+import org.apache.logging.log4j.Level;
+import org.lwjgl.input.Mouse;
+import org.lwjgl.opengl.GL11;
+
 import infiniteinvo.core.II_Settings;
 import infiniteinvo.core.InfiniteInvo;
 import infiniteinvo.inventory.BigContainerPlayer;
@@ -10,9 +14,6 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
-import org.apache.logging.log4j.Level;
-import org.lwjgl.input.Mouse;
-import org.lwjgl.opengl.GL11;
 
 public class GuiBigInventory extends GuiInventory
 {
@@ -134,6 +135,7 @@ public class GuiBigInventory extends GuiInventory
 				}
 			}
         }
+        
 	}
 	
 	@Override
@@ -183,7 +185,7 @@ public class GuiBigInventory extends GuiInventory
     	if(container != null)
     	{
         	int scrollDir = (int)Math.signum(Mouse.getDWheel());
-        	
+//    		int scrollDir = 0;
         	if(container.scrollPos - scrollDir < 0)
         	{
         		container.scrollPos = 0;

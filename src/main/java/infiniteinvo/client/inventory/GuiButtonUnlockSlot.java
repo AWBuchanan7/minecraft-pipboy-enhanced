@@ -2,9 +2,9 @@ package infiniteinvo.client.inventory;
 
 import infiniteinvo.core.II_Settings;
 import infiniteinvo.core.InfiniteInvo;
+import infiniteinvo.core.InvoPacket;
 import infiniteinvo.core.XPHelper;
 import infiniteinvo.inventory.BigInventoryPlayer;
-import infiniteinvo.network.InvoPacket;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.entity.player.EntityPlayer;

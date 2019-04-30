@@ -1,9 +1,13 @@
 package infiniteinvo.inventory;
 
+import java.util.concurrent.Callable;
+
+import org.apache.logging.log4j.Level;
+
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import infiniteinvo.core.II_Settings;
 import infiniteinvo.core.InfiniteInvo;
-import java.util.concurrent.Callable;
-import org.apache.logging.log4j.Level;
 import net.minecraft.crash.CrashReport;
 import net.minecraft.crash.CrashReportCategory;
 import net.minecraft.entity.player.EntityPlayer;
@@ -14,8 +18,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.ReportedException;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 public class BigInventoryPlayer extends InventoryPlayer
 {

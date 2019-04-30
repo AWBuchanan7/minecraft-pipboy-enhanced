@@ -1,6 +1,7 @@
 package infiniteinvo.inventory;
 
 import org.apache.logging.log4j.Level;
+
 import infiniteinvo.core.II_Settings;
 import infiniteinvo.core.InfiniteInvo;
 import net.minecraft.entity.player.EntityPlayer;
