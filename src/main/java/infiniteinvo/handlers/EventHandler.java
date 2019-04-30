@@ -1,15 +1,14 @@
 package infiniteinvo.handlers;
 
-import infiniteinvo.achievements.InvoAchievements;
 import infiniteinvo.client.inventory.GuiBigInventory;
 import infiniteinvo.client.inventory.GuiButtonUnlockSlot;
 import infiniteinvo.client.inventory.InvoScrollBar;
-import infiniteinvo.core.II_Settings;
+import infiniteinvo.core.InfiniteInvo.II_Settings;
 import infiniteinvo.core.InfiniteInvo;
+import infiniteinvo.core.InvoPacket;
 import infiniteinvo.inventory.BigContainerPlayer;
 import infiniteinvo.inventory.BigInventoryPlayer;
 import infiniteinvo.inventory.InventoryPersistProperty;
-import infiniteinvo.network.InvoPacket;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -85,9 +84,6 @@ public class EventHandler
 				requestTags.setInteger("World", event.world.provider.dimensionId);
 				requestTags.setString("Player", player.getCommandSenderName());
 				InfiniteInvo.instance.network.sendToServer(new InvoPacket(requestTags));
-			} else
-			{
-				II_Settings.LoadFromCache();
 			}
 		} else if(event.entity instanceof EntityItem)
 		{
@@ -98,18 +94,6 @@ public class EventHandler
 				itemDrop.setDead();
 				event.setCanceled(true);
 				return;
-			}
-		}
-	}
-	
-	@SubscribeEvent
-	public void onItemDropped(ItemTossEvent event)
-	{
-		if(event.entityItem.getEntityItem() != null)
-		{
-			if(Item.itemRegistry.getNameForObject(event.entityItem.getEntityItem().getItem()).equals("exnihilo:silkworm"))
-			{
-				event.player.addStat(InvoAchievements.wormDrops, 1);
 			}
 		}
 	}
@@ -128,10 +112,6 @@ public class EventHandler
 				
 				EntityPlayer player = event.pickedUp.worldObj.getPlayerEntityByName(event.pickedUp.func_145800_j());
 				
-				if(player != null)
-				{
-					player.addStat(InvoAchievements.boneSanta, 1);
-				}
 			}
 		}
 	}
@@ -148,7 +128,7 @@ public class EventHandler
 			{
 				ItemStack stack = player.inventory.mainInventory[i];
 				
-				if(player.inventory instanceof BigInventoryPlayer && (i >= ((BigInventoryPlayer)player.inventory).getUnlockedSlots() || i - 9 >= II_Settings.invoSize) && !event.entityLiving.worldObj.isRemote && !player.capabilities.isCreativeMode)
+				if(player.inventory instanceof BigInventoryPlayer && (i >= ((BigInventoryPlayer)player.inventory).getUnlockedSlots() || i - 9 >= InfiniteInvo.II_Settings.invoSize) && !event.entityLiving.worldObj.isRemote && !player.capabilities.isCreativeMode)
 				{
 					if(stack != null && stack.getItem() != InfiniteInvo.locked)
 					{
@@ -178,17 +158,13 @@ public class EventHandler
 			
 			if(!event.entityLiving.isEntityAlive())
 			{
-				if(!II_Settings.keepUnlocks && !event.entityLiving.worldObj.getGameRules().getGameRuleBooleanValue("keepInventory"))
+				if(!InfiniteInvo.II_Settings.keepUnlocks && !event.entityLiving.worldObj.getGameRules().getGameRuleBooleanValue("keepInventory"))
 				{
 					unlockCache.remove(event.entityLiving.getCommandSenderName());
 					unlockCache.remove(event.entityLiving.getUniqueID().toString());
 				}
 			}
 			
-			if(flag)
-			{
-				player.addStat(InvoAchievements.bacon, 1);
-			}
 		}
 	}
 	
@@ -197,7 +173,7 @@ public class EventHandler
 	{
 		if(event.entityLiving instanceof EntityPlayer)
 		{
-			if(!II_Settings.keepUnlocks && !event.entityLiving.worldObj.getGameRules().getGameRuleBooleanValue("keepInventory"))
+			if(!InfiniteInvo.II_Settings.keepUnlocks && !event.entityLiving.worldObj.getGameRules().getGameRuleBooleanValue("keepInventory"))
 			{
 				unlockCache.remove(event.entityLiving.getCommandSenderName());
 				unlockCache.remove(event.entityLiving.getUniqueID().toString());
@@ -233,7 +209,7 @@ public class EventHandler
 		EntityPlayer player = mc.thePlayer;
 		KeyBinding pickBlock = mc.gameSettings.keyBindPickBlock;
 		
-		if(pickBlock.isPressed() && mc.objectMouseOver != null && II_Settings.invoSize > 27)
+		if(pickBlock.isPressed() && mc.objectMouseOver != null && InfiniteInvo.II_Settings.invoSize > 27)
 		{
 			KeyBinding.setKeyBindState(pickBlock.getKeyCode(), false);
 			
@@ -368,16 +344,6 @@ public class EventHandler
 		} catch(Exception e)
 		{
 			InfiniteInvo.logger.log(Level.ERROR, "Failed to load slot unlock cache", e);
-		}
-	}
-	
-	@SubscribeEvent
-	public void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent event)
-	{
-		if(event.modID.equals(InfiniteInvo.MODID))
-		{
-			ConfigHandler.config.save();
-			ConfigHandler.initConfigs();
 		}
 	}
 }

@@ -7,7 +7,7 @@ import org.apache.logging.log4j.Level;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
-import infiniteinvo.core.II_Settings;
+import infiniteinvo.core.InfiniteInvo.II_Settings;
 import infiniteinvo.core.InfiniteInvo;
 import infiniteinvo.core.InvoPacket;
 import infiniteinvo.inventory.BigInventoryPlayer;
@@ -72,7 +72,7 @@ public class InvoScrollBar extends GuiButton {
 			Slot s = (Slot) container.inventorySlots.get(i);
 
 			if (s.inventory == Minecraft.getMinecraft().thePlayer.inventory && s.getSlotIndex() >= 9
-					&& s.getSlotIndex() < (II_Settings.invoSize < 27 ? 27 : II_Settings.invoSize) + 9) {
+					&& s.getSlotIndex() < (InfiniteInvo.II_Settings.invoSize < 27 ? 27 : InfiniteInvo.II_Settings.invoSize) + 9) {
 				if (s.getClass() != Slot.class && s.getClass() != SlotLockable.class) {
 					InfiniteInvo.logger.log(Level.WARN,
 							"Container " + container.getClass().getSimpleName()
@@ -111,10 +111,10 @@ public class InvoScrollBar extends GuiButton {
 
 		UpdateChanges(container);
 
-		if (II_Settings.invoSize <= 27) {
+		if (InfiniteInvo.II_Settings.invoSize <= 27) {
 			maxScroll = 0;
 		} else {
-			maxScroll = MathHelper.ceiling_float_int((float) (II_Settings.invoSize - 27) / 9F);
+			maxScroll = MathHelper.ceiling_float_int((float) (InfiniteInvo.II_Settings.invoSize - 27) / 9F);
 		}
 
 		return true;
@@ -147,7 +147,7 @@ public class InvoScrollBar extends GuiButton {
 			Slot s = (Slot) container.inventorySlots.get(i);
 
 			if (s.inventory == Minecraft.getMinecraft().thePlayer.inventory && s.getSlotIndex() >= 9
-					&& s.getSlotIndex() < II_Settings.invoSize + 27) {
+					&& s.getSlotIndex() < InfiniteInvo.II_Settings.invoSize + 27) {
 				if (s.getSlotIndex() >= 36 && s.getSlotIndex() < 36 + 9) {
 					// This is the (oddly indexed) hotbar
 					continue;
@@ -318,7 +318,7 @@ public class InvoScrollBar extends GuiButton {
 						return;
 					}
 
-					if (s.getSlotIndex() - 9 >= II_Settings.invoSize) {
+					if (s.getSlotIndex() - 9 >= InfiniteInvo.II_Settings.invoSize) {
 						s.xDisplayPosition = -999;
 						s.yDisplayPosition = -999;
 						this.drawTexturedModalRect(slotPos[i][0] + guiLeft - 1, slotPos[i][1] + guiTop - 1, 0, 166, 18,

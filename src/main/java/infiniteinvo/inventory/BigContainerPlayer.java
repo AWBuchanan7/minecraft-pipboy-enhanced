@@ -6,7 +6,7 @@ import com.google.common.collect.Lists;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import infiniteinvo.core.II_Settings;
+import infiniteinvo.core.InfiniteInvo.II_Settings;
 import infiniteinvo.core.InfiniteInvo;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ContainerPlayer;
@@ -25,7 +25,7 @@ public class BigContainerPlayer extends ContainerPlayer
 	/**
 	 * A more organised version of 'inventorySlots' that doesn't include the hotbar
 	 */
-	Slot[] slots = new Slot[MathHelper.clamp_int(II_Settings.invoSize, 27, Integer.MAX_VALUE - 100)];
+	Slot[] slots = new Slot[MathHelper.clamp_int(InfiniteInvo.II_Settings.invoSize, 27, Integer.MAX_VALUE - 100)];
 	Slot[] hotbar = new Slot[9];
 	Slot[] crafting = new Slot[4];
 	Slot result;
@@ -191,15 +191,15 @@ public class BigContainerPlayer extends ContainerPlayer
 		{
 			Slot hs = hotbar[i];
 			hs.xDisplayPosition = 8 + (i * 18);
-			hs.yDisplayPosition = 142 + (18 * II_Settings.extraRows);
+			hs.yDisplayPosition = 142 + (18 * InfiniteInvo.II_Settings.extraRows);
 		}
 
 		/*
 		 * What was this again?
 		 */
-		for (int i = 3; i < MathHelper.ceiling_float_int((float)II_Settings.invoSize/9F); ++i) {
+		for (int i = 3; i < MathHelper.ceiling_float_int((float)InfiniteInvo.II_Settings.invoSize/9F); ++i) {
 			for (int j = 0; j < 9; ++j) {
-				if (j + (i * 9) >= II_Settings.invoSize && II_Settings.invoSize > 27) {
+				if (j + (i * 9) >= InfiniteInvo.II_Settings.invoSize && InfiniteInvo.II_Settings.invoSize > 27) {
 					break;
 				} else {
 					// Moved off screen to avoid interaction until screen scrolls over the row
@@ -244,9 +244,9 @@ public class BigContainerPlayer extends ContainerPlayer
 	}
 
 	public void UpdateScroll() {
-		if(scrollPos > MathHelper.ceiling_float_int((float)II_Settings.invoSize/(float)(9 + II_Settings.extraColumns)) - (3 + II_Settings.extraRows))
+		if(scrollPos > MathHelper.ceiling_float_int((float)InfiniteInvo.II_Settings.invoSize/(float)(9 + InfiniteInvo.II_Settings.extraColumns)) - (3 + InfiniteInvo.II_Settings.extraRows))
 		{
-			scrollPos = MathHelper.ceiling_float_int((float)II_Settings.invoSize/(float)(9 + II_Settings.extraColumns)) - (3 + II_Settings.extraRows);
+			scrollPos = MathHelper.ceiling_float_int((float)InfiniteInvo.II_Settings.invoSize/(float)(9 + InfiniteInvo.II_Settings.extraColumns)) - (3 + InfiniteInvo.II_Settings.extraRows);
 		}
 
 		if(scrollPos < 0)
@@ -254,17 +254,17 @@ public class BigContainerPlayer extends ContainerPlayer
 			scrollPos = 0;
 		}
 
-		for(int i = 0; i < MathHelper.ceiling_float_int((float)MathHelper.clamp_int(II_Settings.invoSize, 27, Integer.MAX_VALUE)/(float)(9 + II_Settings.extraColumns)); i++)
+		for(int i = 0; i < MathHelper.ceiling_float_int((float)MathHelper.clamp_int(InfiniteInvo.II_Settings.invoSize, 27, Integer.MAX_VALUE)/(float)(9 + InfiniteInvo.II_Settings.extraColumns)); i++)
 		{
-			for (int j = 0; j < 9 + II_Settings.extraColumns; ++j)
+			for (int j = 0; j < 9 + InfiniteInvo.II_Settings.extraColumns; ++j)
 			{
-				int index = j + (i * (9 + II_Settings.extraColumns));
-				if(index >= II_Settings.invoSize && index >= 27)
+				int index = j + (i * (9 + InfiniteInvo.II_Settings.extraColumns));
+				if(index >= InfiniteInvo.II_Settings.invoSize && index >= 27)
 				{
 					break;
 				} else
 				{
-					if(i >= scrollPos && i < scrollPos + 3 + II_Settings.extraRows && index < invo.getUnlockedSlots() - 9 && index < II_Settings.invoSize)
+					if(i >= scrollPos && i < scrollPos + 3 + InfiniteInvo.II_Settings.extraRows && index < invo.getUnlockedSlots() - 9 && index < InfiniteInvo.II_Settings.invoSize)
 					{
 						Slot s = slots[index];
 						s.xDisplayPosition = 8 + j * 18;

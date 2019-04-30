@@ -6,7 +6,7 @@ import org.apache.logging.log4j.Level;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import infiniteinvo.core.II_Settings;
+import infiniteinvo.core.InfiniteInvo.II_Settings;
 import infiniteinvo.core.InfiniteInvo;
 import net.minecraft.crash.CrashReport;
 import net.minecraft.crash.CrashReportCategory;
@@ -27,7 +27,7 @@ public class BigInventoryPlayer extends InventoryPlayer
 	public BigInventoryPlayer(EntityPlayer player)
 	{
 		super(player);
-		this.mainInventory = new ItemStack[MathHelper.clamp_int(II_Settings.invoSize, 27, Integer.MAX_VALUE - 100) + 9];
+		this.mainInventory = new ItemStack[MathHelper.clamp_int(InfiniteInvo.II_Settings.invoSize, 27, Integer.MAX_VALUE - 100) + 9];
 		
 		if(player.inventory != null)
 		{
@@ -63,7 +63,7 @@ public class BigInventoryPlayer extends InventoryPlayer
 	
 	public int getUnlockedSlots()
 	{
-		int unlocked = II_Settings.xpUnlock && !this.player.capabilities.isCreativeMode? II_Settings.unlockedSlots + 9 + this.player.getEntityData().getInteger("INFINITE_INVO_UNLOCKED") : this.mainInventory.length;
+		int unlocked = InfiniteInvo.II_Settings.xpUnlock && !this.player.capabilities.isCreativeMode? InfiniteInvo.II_Settings.unlockedSlots + 9 + this.player.getEntityData().getInteger("INFINITE_INVO_UNLOCKED") : this.mainInventory.length;
 		
 		unlocked = unlocked <= this.mainInventory.length? unlocked : this.mainInventory.length;
 		
@@ -387,7 +387,7 @@ public class BigInventoryPlayer extends InventoryPlayer
 	@Override
     public void readFromNBT(NBTTagList p_70443_1_)
     {
-        this.mainInventory = new ItemStack[MathHelper.clamp_int(II_Settings.invoSize, 27, Integer.MAX_VALUE - 100) + 9];
+        this.mainInventory = new ItemStack[MathHelper.clamp_int(InfiniteInvo.II_Settings.invoSize, 27, Integer.MAX_VALUE - 100) + 9];
         this.armorInventory = new ItemStack[armorInventory == null? 4 : armorInventory.length]; // Just in case it isn't standard size
         
         for (int i = 0; i < p_70443_1_.tagCount(); ++i)

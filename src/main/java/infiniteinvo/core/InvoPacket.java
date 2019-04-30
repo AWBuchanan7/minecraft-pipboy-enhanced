@@ -68,12 +68,12 @@ public class InvoPacket implements IMessage
 					}
 					
 					int unlocked = player.getEntityData().getInteger("INFINITE_INVO_UNLOCKED");
-					int cost = II_Settings.unlockCost + (unlocked * II_Settings.unlockIncrease);
+					int cost = InfiniteInvo.II_Settings.unlockCost + (unlocked * InfiniteInvo.II_Settings.unlockIncrease);
 					int totalXP = XPHelper.getPlayerXP(player);
 					
-					if(totalXP >= (II_Settings.useOrbs? cost : XPHelper.getLevelXP(cost)))
+					if(totalXP >= (InfiniteInvo.II_Settings.useOrbs? cost : XPHelper.getLevelXP(cost)))
 					{
-						if(II_Settings.useOrbs)
+						if(InfiniteInvo.II_Settings.useOrbs)
 						{
 							XPHelper.AddXP(player, -cost);
 						} else

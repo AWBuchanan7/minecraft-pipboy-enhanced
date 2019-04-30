@@ -4,7 +4,7 @@ import org.apache.logging.log4j.Level;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
-import infiniteinvo.core.II_Settings;
+import infiniteinvo.core.InfiniteInvo.II_Settings;
 import infiniteinvo.core.InfiniteInvo;
 import infiniteinvo.inventory.BigContainerPlayer;
 import net.minecraft.client.gui.GuiButton;
@@ -25,8 +25,8 @@ public class GuiBigInventory extends GuiInventory
 	{
 		super(player);
 		container = player.inventoryContainer instanceof BigContainerPlayer? (BigContainerPlayer)player.inventoryContainer : null;
-		this.xSize = 169 + (18 * II_Settings.extraColumns) + 15;
-		this.ySize = 137 + (18 * II_Settings.extraRows) + 29;
+		this.xSize = 169 + (18 * InfiniteInvo.II_Settings.extraColumns) + 15;
+		this.ySize = 137 + (18 * InfiniteInvo.II_Settings.extraRows) + 29;
 		
 		if(container == null)
 		{
@@ -68,46 +68,46 @@ public class GuiBigInventory extends GuiInventory
         int l = this.guiTop;
         this.drawTexturedModalRect(k, l, 0, 0, 169, 137);
         
-        for(int i = 0; i < II_Settings.extraColumns; i++)
+        for(int i = 0; i < InfiniteInvo.II_Settings.extraColumns; i++)
         {
             this.drawTexturedModalRect(k + 169 + (18 * i), l, 169, 0, 18, 137);
         }
         
-        for(int i = 0; i < II_Settings.extraRows; i++)
+        for(int i = 0; i < InfiniteInvo.II_Settings.extraRows; i++)
         {
             this.drawTexturedModalRect(k, l + 137 + (i * 18), 0, 119, 169, 18);
         }
         
-        for(int i = 0; i < II_Settings.extraColumns; i++)
+        for(int i = 0; i < InfiniteInvo.II_Settings.extraColumns; i++)
         {
-        	for(int j = 0; j < II_Settings.extraRows; j++)
+        	for(int j = 0; j < InfiniteInvo.II_Settings.extraRows; j++)
         	{
                 this.drawTexturedModalRect(k + 169 + (i * 18), l + 137 + (j * 18), 7, 83, 18, 18);
         	}
         }
         
-        int barW = (II_Settings.extraColumns + 9) * (II_Settings.extraRows + 3) < II_Settings.invoSize? 0 : 8;
+        int barW = (InfiniteInvo.II_Settings.extraColumns + 9) * (InfiniteInvo.II_Settings.extraRows + 3) < InfiniteInvo.II_Settings.invoSize? 0 : 8;
 
-        this.drawTexturedModalRect(k + 169 + (II_Settings.extraColumns * 18), l, 187, 0, 2, 119); // Scroll top
-        this.drawTexturedModalRect(k + 169 + (II_Settings.extraColumns * 18) + 2, l, 189 + barW, 0, 13 - barW, 119); // Scroll top
+        this.drawTexturedModalRect(k + 169 + (InfiniteInvo.II_Settings.extraColumns * 18), l, 187, 0, 2, 119); // Scroll top
+        this.drawTexturedModalRect(k + 169 + (InfiniteInvo.II_Settings.extraColumns * 18) + 2, l, 189 + barW, 0, 13 - barW, 119); // Scroll top
         
-        for(int i = 0; i < II_Settings.extraRows; i++)
+        for(int i = 0; i < InfiniteInvo.II_Settings.extraRows; i++)
         {
-            this.drawTexturedModalRect(k + 169 + (II_Settings.extraColumns * 18), l + 119 + (i * 18), 187, 101, 2, 18); // Scroll middle
-            this.drawTexturedModalRect(k + 169 + (II_Settings.extraColumns * 18) + 2, l + 119 + (i * 18), 189 + barW, 101, 13 - barW, 18); // Scroll middle
+            this.drawTexturedModalRect(k + 169 + (InfiniteInvo.II_Settings.extraColumns * 18), l + 119 + (i * 18), 187, 101, 2, 18); // Scroll middle
+            this.drawTexturedModalRect(k + 169 + (InfiniteInvo.II_Settings.extraColumns * 18) + 2, l + 119 + (i * 18), 189 + barW, 101, 13 - barW, 18); // Scroll middle
         }
         
-        this.drawTexturedModalRect(k + 169 + (II_Settings.extraColumns * 18), l + 119 + (II_Settings.extraRows * 18), 187, 119, 2, 18); // Scroll bottom
-        this.drawTexturedModalRect(k + 169 + (II_Settings.extraColumns * 18) + 2, l + 119 + (II_Settings.extraRows * 18), 189 + barW, 119, 13 - barW, 18); // Scroll bottom
+        this.drawTexturedModalRect(k + 169 + (InfiniteInvo.II_Settings.extraColumns * 18), l + 119 + (InfiniteInvo.II_Settings.extraRows * 18), 187, 119, 2, 18); // Scroll bottom
+        this.drawTexturedModalRect(k + 169 + (InfiniteInvo.II_Settings.extraColumns * 18) + 2, l + 119 + (InfiniteInvo.II_Settings.extraRows * 18), 189 + barW, 119, 13 - barW, 18); // Scroll bottom
         
-        this.drawTexturedModalRect(k, l + 137 + (II_Settings.extraRows * 18), 0, 137, 169, 29);
+        this.drawTexturedModalRect(k, l + 137 + (InfiniteInvo.II_Settings.extraRows * 18), 0, 137, 169, 29);
         
-        for(int i = 0; i < II_Settings.extraColumns; i++)
+        for(int i = 0; i < InfiniteInvo.II_Settings.extraColumns; i++)
         {
-            this.drawTexturedModalRect(k + 169 + (i * 18), l + 137 + (II_Settings.extraRows * 18), 169, 137, 18, 29);
+            this.drawTexturedModalRect(k + 169 + (i * 18), l + 137 + (InfiniteInvo.II_Settings.extraRows * 18), 169, 137, 18, 29);
         }
         
-        this.drawTexturedModalRect(k + 169 + (II_Settings.extraColumns * 18), l + 137 + (II_Settings.extraRows * 18), 187 + barW, 137, 16 - barW, 29);
+        this.drawTexturedModalRect(k + 169 + (InfiniteInvo.II_Settings.extraColumns * 18), l + 137 + (InfiniteInvo.II_Settings.extraRows * 18), 187 + barW, 137, 16 - barW, 29);
         
         func_147046_a(k + 51, l + 75, 30, (float)(k + 51) - (float)p_146976_2_, (float)(l + 75 - 50) - (float)p_146976_3_, this.mc.thePlayer);
         
@@ -120,18 +120,18 @@ public class GuiBigInventory extends GuiInventory
 				
 				if(button.xPosition > this.width/2)
 				{
-					button.xPosition += (II_Settings.extraColumns * 9) + 4;
+					button.xPosition += (InfiniteInvo.II_Settings.extraColumns * 9) + 4;
 				} else if(button.xPosition < this.width/2)
 				{
-					button.xPosition -= (II_Settings.extraColumns * 9) + 4;
+					button.xPosition -= (InfiniteInvo.II_Settings.extraColumns * 9) + 4;
 				}
 				
 				if(button.yPosition > this.height/2)
 				{
-					button.yPosition += (II_Settings.extraRows * 9);
+					button.yPosition += (InfiniteInvo.II_Settings.extraRows * 9);
 				} else if(button.yPosition < this.height/2)
 				{
-					button.yPosition -= (II_Settings.extraRows * 9);
+					button.yPosition -= (InfiniteInvo.II_Settings.extraRows * 9);
 				}
 			}
         }
@@ -148,23 +148,23 @@ public class GuiBigInventory extends GuiInventory
 	        GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 			this.mc.getTextureManager().bindTexture(new ResourceLocation("infiniteinvo", "textures/gui/adjustable_gui.png"));
 			
-	        int maxPos = MathHelper.ceiling_float_int((float)II_Settings.invoSize/(float)(9 + II_Settings.extraColumns)) - (3 + II_Settings.extraRows);
-			int barPos = maxPos > 0? MathHelper.floor_float((float)container.scrollPos / (float)maxPos * (18F * (3F + (float)II_Settings.extraRows) - 8F)) : 0;
+	        int maxPos = MathHelper.ceiling_float_int((float)InfiniteInvo.II_Settings.invoSize/(float)(9 + InfiniteInvo.II_Settings.extraColumns)) - (3 + InfiniteInvo.II_Settings.extraRows);
+			int barPos = maxPos > 0? MathHelper.floor_float((float)container.scrollPos / (float)maxPos * (18F * (3F + (float)InfiniteInvo.II_Settings.extraRows) - 8F)) : 0;
 			
-			if((II_Settings.extraColumns + 9) * (II_Settings.extraRows + 3) < II_Settings.invoSize)
+			if((InfiniteInvo.II_Settings.extraColumns + 9) * (InfiniteInvo.II_Settings.extraRows + 3) < InfiniteInvo.II_Settings.invoSize)
 			{
 				this.drawTexturedModalRect(this.xSize - 13, 83 + barPos, 60, 166, 8, 8);
 			}
 	        
 	        // Draw the empty/locked slot icons
-	        for(int j = 0; j < 3 + II_Settings.extraRows; j++)
+	        for(int j = 0; j < 3 + InfiniteInvo.II_Settings.extraRows; j++)
 	        {
-	        	for(int i = 0; i < 9 + II_Settings.extraColumns; i++)
+	        	for(int i = 0; i < 9 + InfiniteInvo.II_Settings.extraColumns; i++)
 	        	{
-	        		if(i + (j + container.scrollPos) * (9 + II_Settings.extraColumns) >= II_Settings.invoSize)
+	        		if(i + (j + container.scrollPos) * (9 + InfiniteInvo.II_Settings.extraColumns) >= InfiniteInvo.II_Settings.invoSize)
 	        		{
 	        			this.drawTexturedModalRect(7 + i * 18, 83 + j * 18, 0, 166, 18, 18);
-	        		} else if(i + (j + container.scrollPos) * (9 + II_Settings.extraColumns) >= container.invo.getUnlockedSlots() - 9)
+	        		} else if(i + (j + container.scrollPos) * (9 + InfiniteInvo.II_Settings.extraColumns) >= container.invo.getUnlockedSlots() - 9)
 	        		{
 	        			this.drawTexturedModalRect(7 + i * 18, 83 + j * 18, 18, 166, 18, 18);
 	        		}
@@ -199,16 +199,16 @@ public class GuiBigInventory extends GuiInventory
                 int j = scaledresolution.getScaledHeight();
                 int mouseX = Mouse.getX() * i / this.mc.displayWidth;
                 int mouseY = height - Mouse.getY() * j / this.mc.displayHeight - 1;
-        		int sx = this.guiLeft + 169 + (II_Settings.extraColumns * 18);
+        		int sx = this.guiLeft + 169 + (InfiniteInvo.II_Settings.extraColumns * 18);
         		int sy = this.guiTop + 83;
         		
-        		boolean flag = mouseX >= sx && mouseY >= sy && mouseX < sx + 8 && mouseY < sy + (18 * (3 + II_Settings.extraRows));
+        		boolean flag = mouseX >= sx && mouseY >= sy && mouseX < sx + 8 && mouseY < sy + (18 * (3 + InfiniteInvo.II_Settings.extraRows));
         		
         		if((flag || dragging == 1) && dragging != -1)
         		{
         			dragging = 1;
-        			int maxScroll = MathHelper.ceiling_float_int((float)II_Settings.invoSize/(float)(9 + II_Settings.extraColumns)) - (3 + II_Settings.extraRows);
-        			container.scrollPos = MathHelper.clamp_int(Math.round((float)(mouseY - sy) / (float)(18 * (3 + II_Settings.extraRows)) * (float)maxScroll), 0, maxScroll);
+        			int maxScroll = MathHelper.ceiling_float_int((float)InfiniteInvo.II_Settings.invoSize/(float)(9 + InfiniteInvo.II_Settings.extraColumns)) - (3 + InfiniteInvo.II_Settings.extraRows);
+        			container.scrollPos = MathHelper.clamp_int(Math.round((float)(mouseY - sy) / (float)(18 * (3 + InfiniteInvo.II_Settings.extraRows)) * (float)maxScroll), 0, maxScroll);
         		} else
         		{
         			dragging = -1;

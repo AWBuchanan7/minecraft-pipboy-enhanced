@@ -1,6 +1,6 @@
 package infiniteinvo.client.inventory;
 
-import infiniteinvo.core.II_Settings;
+import infiniteinvo.core.InfiniteInvo.II_Settings;
 import infiniteinvo.core.InfiniteInvo;
 import infiniteinvo.core.InvoPacket;
 import infiniteinvo.core.XPHelper;
@@ -31,18 +31,18 @@ public class GuiButtonUnlockSlot extends GuiButton
 	@Override
 	public void drawButton(Minecraft mc, int mx, int my)
 	{
-		this.visible = II_Settings.xpUnlock;
-		int cost = (II_Settings.unlockCost + (player.getEntityData().getInteger("INFINITE_INVO_UNLOCKED") * II_Settings.unlockIncrease));
+		this.visible = InfiniteInvo.II_Settings.xpUnlock;
+		int cost = (InfiniteInvo.II_Settings.unlockCost + (player.getEntityData().getInteger("INFINITE_INVO_UNLOCKED") * InfiniteInvo.II_Settings.unlockIncrease));
 		
 		if(player.inventory instanceof BigInventoryPlayer)
 		{ 
-			this.enabled = XPHelper.getPlayerXP(player) >= (II_Settings.useOrbs? cost : XPHelper.getLevelXP(cost)) && II_Settings.xpUnlock && ((BigInventoryPlayer)player.inventory).getUnlockedSlots() - 9 < II_Settings.invoSize;
+			this.enabled = XPHelper.getPlayerXP(player) >= (InfiniteInvo.II_Settings.useOrbs? cost : XPHelper.getLevelXP(cost)) && InfiniteInvo.II_Settings.xpUnlock && ((BigInventoryPlayer)player.inventory).getUnlockedSlots() - 9 < InfiniteInvo.II_Settings.invoSize;
 		} else
 		{
 			this.enabled = false;
 		}
 		
-		this.displayString = this.enabled? StatCollector.translateToLocal("infiniteinvo.unlockslot") : (II_Settings.useOrbs? XPHelper.getPlayerXP(player) : player.experienceLevel) + " / " + cost + " XP";
+		this.displayString = this.enabled? StatCollector.translateToLocal("infiniteinvo.unlockslot") : (InfiniteInvo.II_Settings.useOrbs? XPHelper.getPlayerXP(player) : player.experienceLevel) + " / " + cost + " XP";
 		
 		super.drawButton(mc, mx, my);
 	}
@@ -59,7 +59,7 @@ public class GuiButtonUnlockSlot extends GuiButton
 			tags.setInteger("ID", 0);
 			tags.setInteger("World", player.worldObj.provider.dimensionId);
 			tags.setString("Player", player.getCommandSenderName());
-			tags.setInteger("InvoSize", II_Settings.invoSize);
+			tags.setInteger("InvoSize", InfiniteInvo.II_Settings.invoSize);
 			InfiniteInvo.instance.network.sendToServer(new InvoPacket(tags));
 		}
 		

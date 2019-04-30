@@ -1,7 +1,7 @@
 package infiniteinvo.core.proxies;
 
 import infiniteinvo.core.InfiniteInvo;
-import infiniteinvo.network.InvoPacket;
+import infiniteinvo.core.InvoPacket;
 import cpw.mods.fml.relauncher.Side;
 
 public class ClientProxy extends CommonProxy

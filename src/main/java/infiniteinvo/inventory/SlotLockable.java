@@ -2,7 +2,7 @@ package infiniteinvo.inventory;
 
 import org.apache.logging.log4j.Level;
 
-import infiniteinvo.core.II_Settings;
+import infiniteinvo.core.InfiniteInvo.II_Settings;
 import infiniteinvo.core.InfiniteInvo;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
@@ -110,7 +110,7 @@ public class SlotLockable extends Slot
 	@Override
     public boolean getHasStack()
     {
-        return this.getStack() != null && (this.getStack().getItem() != InfiniteInvo.locked || !II_Settings.IT_Patch);
+        return this.getStack() != null && (this.getStack().getItem() != InfiniteInvo.locked || !InfiniteInvo.II_Settings.IT_Patch);
     }
 	
 	public boolean isUnlocked(BigInventoryPlayer invo)
@@ -120,7 +120,7 @@ public class SlotLockable extends Slot
 			return true;
 		} else
 		{
-			return invo.getUnlockedSlots() > this.slotIndex && this.slotIndex - 9 < II_Settings.invoSize;
+			return invo.getUnlockedSlots() > this.slotIndex && this.slotIndex - 9 < InfiniteInvo.II_Settings.invoSize;
 		}
 	}
 }

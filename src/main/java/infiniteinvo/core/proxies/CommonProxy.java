@@ -1,9 +1,9 @@
 package infiniteinvo.core.proxies;
 
 import infiniteinvo.core.InfiniteInvo;
+import infiniteinvo.core.InvoPacket;
 import infiniteinvo.handlers.EventHandler;
 import infiniteinvo.handlers.II_UpdateNotification;
-import infiniteinvo.network.InvoPacket;
 import net.minecraftforge.common.MinecraftForge;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;

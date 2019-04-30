@@ -17,7 +17,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import infiniteinvo.client.inventory.GuiBigInventory;
 import infiniteinvo.client.inventory.GuiButtonUnlockSlot;
 import infiniteinvo.client.inventory.InvoScrollBar;
-import infiniteinvo.core.II_Settings;
+import infiniteinvo.core.InfiniteInvo.II_Settings;
 import infiniteinvo.core.InfiniteInvo;
 import infiniteinvo.core.InvoPacket;
 import infiniteinvo.inventory.BigContainerPlayer;
@@ -134,7 +134,7 @@ public class InfiniteInvoEventHandler
 			{
 				ItemStack stack = player.inventory.mainInventory[i];
 				
-				if(player.inventory instanceof BigInventoryPlayer && (i >= ((BigInventoryPlayer)player.inventory).getUnlockedSlots() || i - 9 >= II_Settings.invoSize) && !event.entityLiving.worldObj.isRemote && !player.capabilities.isCreativeMode)
+				if(player.inventory instanceof BigInventoryPlayer && (i >= ((BigInventoryPlayer)player.inventory).getUnlockedSlots() || i - 9 >= InfiniteInvo.II_Settings.invoSize) && !event.entityLiving.worldObj.isRemote && !player.capabilities.isCreativeMode)
 				{
 					if(stack != null && stack.getItem() != InfiniteInvo.locked)
 					{
@@ -164,7 +164,7 @@ public class InfiniteInvoEventHandler
 			
 			if(!event.entityLiving.isEntityAlive())
 			{
-				if(!II_Settings.keepUnlocks && !event.entityLiving.worldObj.getGameRules().getGameRuleBooleanValue("keepInventory"))
+				if(!InfiniteInvo.II_Settings.keepUnlocks && !event.entityLiving.worldObj.getGameRules().getGameRuleBooleanValue("keepInventory"))
 				{
 					unlockCache.remove(event.entityLiving.getCommandSenderName());
 					unlockCache.remove(event.entityLiving.getUniqueID().toString());
@@ -180,7 +180,7 @@ public class InfiniteInvoEventHandler
 	{
 		if(event.entityLiving instanceof EntityPlayer)
 		{
-			if(!II_Settings.keepUnlocks && !event.entityLiving.worldObj.getGameRules().getGameRuleBooleanValue("keepInventory"))
+			if(!InfiniteInvo.II_Settings.keepUnlocks && !event.entityLiving.worldObj.getGameRules().getGameRuleBooleanValue("keepInventory"))
 			{
 				unlockCache.remove(event.entityLiving.getCommandSenderName());
 				unlockCache.remove(event.entityLiving.getUniqueID().toString());
@@ -216,7 +216,7 @@ public class InfiniteInvoEventHandler
 		EntityPlayer player = mc.thePlayer;
 		KeyBinding pickBlock = mc.gameSettings.keyBindPickBlock;
 		
-		if(pickBlock.isPressed() && mc.objectMouseOver != null && II_Settings.invoSize > 27)
+		if(pickBlock.isPressed() && mc.objectMouseOver != null && InfiniteInvo.II_Settings.invoSize > 27)
 		{
 			KeyBinding.setKeyBindState(pickBlock.getKeyCode(), false);
 			
