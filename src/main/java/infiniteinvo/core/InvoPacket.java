@@ -49,11 +49,13 @@ public class InvoPacket implements IMessage
 		@Override
 		public IMessage onMessage(InvoPacket message, MessageContext ctx)
 		{
+			MinecraftServer x = Minecraft.getMinecraft().getIntegratedServer();
+			
 			if(message.tags.hasKey("ID"))
 			{
 				if(message.tags.getInteger("ID") == 0) // Request slot unlock
 				{
-					WorldServer world = MinecraftServer.getServer().worldServerForDimension(message.tags.getInteger("World"));
+					WorldServer world = x.getWorld(message.tags.getInteger("World"));
 					
 					if(world == null)
 					{
@@ -88,18 +90,18 @@ public class InvoPacket implements IMessage
 						
 						NBTTagCompound replyTags = new NBTTagCompound();
 						replyTags.setInteger("ID", 0);
-						replyTags.setString("Player", player.getCommandSenderEntity());
+						replyTags.setString("Player", player.getCommandSenderEntity().getName());
 						replyTags.setInteger("Unlocked", unlocked);
 						return new InvoPacket(replyTags);
 						
 					}
 				} else if(message.tags.getInteger("ID") == 1) // Sync which slots have been unlocked and the server side settings
 				{
-					WorldServer world = MinecraftServer.getServer().worldServerForDimension(message.tags.getInteger("World"));
+					WorldServer world = x.getWorld(message.tags.getInteger("World"));
 					
 					if(world == null)
 					{
-						InfiniteInvo.logger.log(Level.WARN, "Unlock Sync Failed! Unabled to locate dimension " + message.tags.getInteger("World"));
+						InfiniteInvo.logger.log(Level.WARN, "Unlock Sync Failed! Unable to locate dimension " + message.tags.getInteger("World"));
 						return null;
 					}
 					
@@ -107,7 +109,7 @@ public class InvoPacket implements IMessage
 					
 					if(player == null || player.getEntityData() == null)
 					{
-						InfiniteInvo.logger.log(Level.WARN, "Unlock Sync Failed! Unabled to get data for player '" + message.tags.getString("Player") + "'");
+						InfiniteInvo.logger.log(Level.WARN, "Unlock Sync Failed! Unable to get data for player '" + message.tags.getString("Player") + "'");
 						return null;
 					}
 					
@@ -131,12 +133,12 @@ public class InvoPacket implements IMessage
 					
 					NBTTagCompound reply = new NBTTagCompound();
 					reply.setInteger("ID", 0);
-					reply.setString("Player", player.getCommandSenderEntity());
+					reply.setString("Player", player.getCommandSenderEntity().getName());
 					reply.setInteger("Unlocked", unlocked);
 					return new InvoPacket(reply);
 				} else if(message.tags.getInteger("ID") == 2) // Update inventory scroll
 				{
-					WorldServer world = MinecraftServer.getServer().worldServerForDimension(message.tags.getInteger("World"));
+					WorldServer world = x.getWorld(message.tags.getInteger("World"));
 					
 					if(world == null)
 					{
@@ -191,7 +193,7 @@ public class InvoPacket implements IMessage
 								return null;
 							} else if(!(s instanceof SlotLockable))
 							{
-								Slot r = new SlotLockable(s.inventory, sInx + (scrollPos * 9), s.xDisplayPosition, s.yDisplayPosition);
+								Slot r = new SlotLockable(s.inventory, sInx + (scrollPos * 9), s.xPos, s.yPos);
 								
 								// Replace the local slot with our own tweaked one so that locked slots are handled properly
 								container.inventorySlots.set(sNum, r);
@@ -231,7 +233,7 @@ public class InvoPacket implements IMessage
 			{
 				if(message.tags.getInteger("ID") == 0)
 				{
-					EntityPlayer player = Minecraft.getMinecraft().thePlayer;
+					EntityPlayer player = Minecraft.getMinecraft().player;
 					
 					if(!message.tags.hasKey("Player") || !message.tags.getString("Player").equals(player.getCommandSenderEntity()))
 					{

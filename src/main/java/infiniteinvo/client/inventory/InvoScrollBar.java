@@ -20,8 +20,8 @@ import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.MathHelper;
 
 public class InvoScrollBar extends GuiButton {
 	int refresh = 0;
@@ -71,7 +71,7 @@ public class InvoScrollBar extends GuiButton {
 		for (int i = 0; i < container.inventorySlots.size() && index < 27; i++) {
 			Slot s = (Slot) container.inventorySlots.get(i);
 
-			if (s.inventory == Minecraft.getMinecraft().thePlayer.inventory && s.getSlotIndex() >= 9
+			if (s.inventory == Minecraft.getMinecraft().player.inventory && s.getSlotIndex() >= 9
 					&& s.getSlotIndex() < (InfiniteInvo.II_Settings.invoSize < 27 ? 27 : InfiniteInvo.II_Settings.invoSize) + 9) {
 				if (s.getClass() != Slot.class && s.getClass() != SlotLockable.class) {
 					InfiniteInvo.logger.log(Level.WARN,
@@ -81,7 +81,7 @@ public class InvoScrollBar extends GuiButton {
 					return false;
 				}
 
-				Slot r = new SlotLockable(s.inventory, index + 9, s.xDisplayPosition, s.yDisplayPosition);
+				Slot r = new SlotLockable(s.inventory, index + 9, s.xPos, s.yPos);
 
 				// Replace the local slot with our own tweaked one so that locked slots are
 				// handled properly
@@ -94,15 +94,15 @@ public class InvoScrollBar extends GuiButton {
 				invoSlots[index] = s;
 				slotIndex[0][index] = s.getSlotIndex();
 				slotIndex[1][index] = i;
-				slotPos[index][0] = s.xDisplayPosition;
-				slotPos[index][1] = s.yDisplayPosition;
+				slotPos[index][0] = s.xPos;
+				slotPos[index][1] = s.yPos;
 
-				if (s.xDisplayPosition - 1 > scrollX) {
-					scrollX = s.xDisplayPosition - 1;
+				if (s.xPos - 1 > scrollX) {
+					scrollX = s.xPos - 1;
 				}
 
-				if (s.yDisplayPosition - 1 < scrollY) {
-					scrollY = s.yDisplayPosition - 1;
+				if (s.yPos - 1 < scrollY) {
+					scrollY = s.yPos - 1;
 				}
 
 				index++;
@@ -114,7 +114,7 @@ public class InvoScrollBar extends GuiButton {
 		if (InfiniteInvo.II_Settings.invoSize <= 27) {
 			maxScroll = 0;
 		} else {
-			maxScroll = MathHelper.ceiling_float_int((float) (InfiniteInvo.II_Settings.invoSize - 27) / 9F);
+			maxScroll = MathHelper.ceil((float) (InfiniteInvo.II_Settings.invoSize - 27) / 9F);
 		}
 
 		return true;
@@ -146,7 +146,7 @@ public class InvoScrollBar extends GuiButton {
 		for (int i = 0; i < container.inventorySlots.size(); i++) {
 			Slot s = (Slot) container.inventorySlots.get(i);
 
-			if (s.inventory == Minecraft.getMinecraft().thePlayer.inventory && s.getSlotIndex() >= 9
+			if (s.inventory == Minecraft.getMinecraft().player.inventory && s.getSlotIndex() >= 9
 					&& s.getSlotIndex() < InfiniteInvo.II_Settings.invoSize + 27) {
 				if (s.getSlotIndex() >= 36 && s.getSlotIndex() < 36 + 9) {
 					// This is the (oddly indexed) hotbar
@@ -157,15 +157,15 @@ public class InvoScrollBar extends GuiButton {
 				indexList.add(tmp);
 
 				if (s.getSlotIndex() >= 36) {
-					s.xDisplayPosition = -2000;
-					s.yDisplayPosition = -2000;
+					s.xPos = -2000;
+					s.yPos = -2000;
 				} else {
-					if (s.xDisplayPosition - 1 > scrollX) {
-						scrollX = s.xDisplayPosition - 1;
+					if (s.xPos - 1 > scrollX) {
+						scrollX = s.xPos - 1;
 					}
 
-					if (s.yDisplayPosition - 1 < scrollY) {
-						scrollY = s.yDisplayPosition - 1;
+					if (s.yPos - 1 < scrollY) {
+						scrollY = s.yPos - 1;
 					}
 				}
 			}
@@ -180,7 +180,7 @@ public class InvoScrollBar extends GuiButton {
 		if (invoSlots.length <= 27) {
 			maxScroll = 0;
 		} else {
-			maxScroll = MathHelper.ceiling_float_int((float) (invoSlots.length - 27) / 9F);
+			maxScroll = MathHelper.ceil((float) (invoSlots.length - 27) / 9F);
 		}
 
 		return true;
@@ -242,7 +242,7 @@ public class InvoScrollBar extends GuiButton {
 			if ((flag || dragging == 1) && dragging != -1) {
 				dragging = 1;
 				int preScroll = scrollPos;
-				int tmpPos = MathHelper.clamp_int(Math.round((float) (my - sy) / (float) (18 * 3) * (float) maxScroll),
+				int tmpPos = MathHelper.clamp(Math.round((float) (my - sy) / (float) (18 * 3) * (float) maxScroll),
 						0, maxScroll);
 				if (preScroll - tmpPos != 0) {
 					doScroll(preScroll - tmpPos);
@@ -265,8 +265,8 @@ public class InvoScrollBar extends GuiButton {
 					this.guiTop + scrollY + (Math.round((float) scrollPos / (float) maxScroll * 46F)), 60, 166, 8, 8);
 		}
 
-		if (Minecraft.getMinecraft().thePlayer.inventory instanceof BigInventoryPlayer) {
-			BigInventoryPlayer pinvo = (BigInventoryPlayer) Minecraft.getMinecraft().thePlayer.inventory;
+		if (Minecraft.getMinecraft().player.inventory instanceof BigInventoryPlayer) {
+			BigInventoryPlayer pinvo = (BigInventoryPlayer) Minecraft.getMinecraft().player.inventory;
 
 			if (this.enabled && (invoSlots.length <= 0 || invoSlots[0] == null)) {
 				if (creative) {
@@ -304,13 +304,13 @@ public class InvoScrollBar extends GuiButton {
 					int k = j - 9;
 					int l = k % 9;
 					int i1 = k / 9;
-					s.xDisplayPosition = 9 + l * 18;
+					s.xPos = 9 + l * 18;
 
 					if (j >= 36 || j < 9) {
-						s.yDisplayPosition = -2000;
-						s.xDisplayPosition = -2000;
+						s.yPos = -2000;
+						s.xPos = -2000;
 					} else {
-						s.yDisplayPosition = 54 + i1 * 18;
+						s.yPos = 54 + i1 * 18;
 					}
 				} else {
 					if (!container.inventorySlots.contains(s)) {
@@ -319,18 +319,18 @@ public class InvoScrollBar extends GuiButton {
 					}
 
 					if (s.getSlotIndex() - 9 >= InfiniteInvo.II_Settings.invoSize) {
-						s.xDisplayPosition = -999;
-						s.yDisplayPosition = -999;
+						s.xPos = -999;
+						s.yPos = -999;
 						this.drawTexturedModalRect(slotPos[i][0] + guiLeft - 1, slotPos[i][1] + guiTop - 1, 0, 166, 18,
 								18);
 					} else if (pinvo.getUnlockedSlots() <= s.getSlotIndex()) {
-						s.xDisplayPosition = -999;
-						s.yDisplayPosition = -999;
+						s.xPos = -999;
+						s.yPos = -999;
 						this.drawTexturedModalRect(slotPos[i][0] + guiLeft - 1, slotPos[i][1] + guiTop - 1, 18, 166, 18,
 								18);
 					} else {
-						s.xDisplayPosition = slotPos[i][0];
-						s.yDisplayPosition = slotPos[i][1];
+						s.xPos = slotPos[i][0];
+						s.yPos = slotPos[i][1];
 					}
 				}
 
@@ -351,7 +351,7 @@ public class InvoScrollBar extends GuiButton {
 
 		scrollPos -= (int) Math.signum(scrollDX);
 
-		scrollPos = MathHelper.clamp_int(scrollPos, 0, maxScroll);
+		scrollPos = MathHelper.clamp(scrollPos, 0, maxScroll);
 
 		if (!creative) {
 			for (int i = 0; i < invoSlots.length; i++) {
@@ -365,8 +365,8 @@ public class InvoScrollBar extends GuiButton {
 
 			NBTTagCompound scrollTags = new NBTTagCompound();
 			scrollTags.setInteger("ID", 2);
-			scrollTags.setString("Player", Minecraft.getMinecraft().thePlayer.getCommandSenderName());
-			scrollTags.setInteger("World", Minecraft.getMinecraft().thePlayer.worldObj.provider.dimensionId);
+			scrollTags.setString("Player", Minecraft.getMinecraft().player.getCommandSenderEntity().getName());
+			scrollTags.setInteger("World", Minecraft.getMinecraft().player.world.provider.getDimension());
 			scrollTags.setInteger("Scroll", scrollPos);
 			scrollTags.setIntArray("Indexes", slotIndex[0]);
 			scrollTags.setIntArray("Numbers", slotIndex[1]);

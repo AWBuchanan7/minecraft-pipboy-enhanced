@@ -9,7 +9,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.StatCollector;
 
 public class GuiButtonUnlockSlot extends GuiButton
 {
@@ -29,7 +28,7 @@ public class GuiButtonUnlockSlot extends GuiButton
 	}
 	
 	@Override
-	public void drawButton(Minecraft mc, int mx, int my)
+	public void drawButton(Minecraft mc, int mx, int my, float partialTicks)
 	{
 		this.visible = InfiniteInvo.II_Settings.xpUnlock;
 		int cost = (InfiniteInvo.II_Settings.unlockCost + (player.getEntityData().getInteger("INFINITE_INVO_UNLOCKED") * InfiniteInvo.II_Settings.unlockIncrease));
@@ -42,9 +41,9 @@ public class GuiButtonUnlockSlot extends GuiButton
 			this.enabled = false;
 		}
 		
-		this.displayString = this.enabled? StatCollector.translateToLocal("infiniteinvo.unlockslot") : (InfiniteInvo.II_Settings.useOrbs? XPHelper.getPlayerXP(player) : player.experienceLevel) + " / " + cost + " XP";
+//		this.displayString = this.enabled? StatCollector.translateToLocal("infiniteinvo.unlockslot") : (InfiniteInvo.II_Settings.useOrbs? XPHelper.getPlayerXP(player) : player.experienceLevel) + " / " + cost + " XP";
 		
-		super.drawButton(mc, mx, my);
+		super.drawButton(mc, mx, my, 0.0f);
 	}
 	
 	@Override
@@ -57,8 +56,8 @@ public class GuiButtonUnlockSlot extends GuiButton
 			enabled = false;
 			NBTTagCompound tags = new NBTTagCompound();
 			tags.setInteger("ID", 0);
-			tags.setInteger("World", player.worldObj.provider.dimensionId);
-			tags.setString("Player", player.getCommandSenderName());
+			tags.setInteger("World", player.world.provider.getDimension());
+			tags.setString("Player", player.getCommandSenderEntity().getName());
 			tags.setInteger("InvoSize", InfiniteInvo.II_Settings.invoSize);
 			InfiniteInvo.instance.network.sendToServer(new InvoPacket(tags));
 		}

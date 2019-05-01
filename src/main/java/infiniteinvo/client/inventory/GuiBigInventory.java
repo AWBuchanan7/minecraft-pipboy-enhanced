@@ -1,5 +1,7 @@
 package infiniteinvo.client.inventory;
 
+import java.io.IOException;
+
 import org.apache.logging.log4j.Level;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
@@ -109,7 +111,7 @@ public class GuiBigInventory extends GuiInventory
         
         this.drawTexturedModalRect(k + 169 + (InfiniteInvo.II_Settings.extraColumns * 18), l + 137 + (InfiniteInvo.II_Settings.extraRows * 18), 187 + barW, 137, 16 - barW, 29);
         
-        func_147046_a(k + 51, l + 75, 30, (float)(k + 51) - (float)p_146976_2_, (float)(l + 75 - 50) - (float)p_146976_3_, this.mc.player);
+        drawEntityOnScreen(k + 51, l + 75, 30, (float)(k + 51) - (float)p_146976_2_, (float)(l + 75 - 50) - (float)p_146976_3_, this.mc.player);
         
         if(redoButtons)
         {
@@ -178,7 +180,7 @@ public class GuiBigInventory extends GuiInventory
 	 */
 	public int dragging = 0;
 	
-    public void handleMouseInput()
+    public void handleMouseInput() throws IOException
     {
     	super.handleMouseInput();
     	

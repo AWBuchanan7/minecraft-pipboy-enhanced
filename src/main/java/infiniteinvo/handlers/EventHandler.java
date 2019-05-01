@@ -56,7 +56,7 @@ public class EventHandler
 	{
 		if(event.getEntity() instanceof EntityPlayer)
 		{
-			EntityPlayer player = (EntityPlayer)event.entity;
+			EntityPlayer player = (EntityPlayer)event.getEntity();
 			
 			if(InventoryPersistProperty.get(player) == null)
 			{
@@ -70,7 +70,7 @@ public class EventHandler
 	{
 		if(event.getEntity() instanceof EntityPlayer)
 		{
-			EntityPlayer player = (EntityPlayer)event.entity;
+			EntityPlayer player = (EntityPlayer)event.getEntity();
 			
 			if(InventoryPersistProperty.get(player) != null)
 			{
@@ -81,7 +81,7 @@ public class EventHandler
 			{
 				NBTTagCompound requestTags = new NBTTagCompound();
 				requestTags.setInteger("ID", 1);
-				requestTags.setInteger("World", event.getWorld().provider.dimensionId);
+				requestTags.setInteger("World", event.getWorld().provider.getDimension());
 				requestTags.setString("Player", player.getCommandSenderEntity().getName());
 				InfiniteInvo.instance.network.sendToServer(new InvoPacket(requestTags));
 			}
@@ -120,16 +120,16 @@ public class EventHandler
 	@SubscribeEvent
 	public void onEntityLiving(LivingUpdateEvent event)
 	{
-		if(event.entityLiving instanceof EntityPlayer)
+		if(event.getEntityLiving() instanceof EntityPlayer)
 		{
-			EntityPlayer player = (EntityPlayer)event.entityLiving;
+			EntityPlayer player = (EntityPlayer)event.getEntityLiving();
 			
 			boolean flag = true;
-			for(int i = 9; i < player.inventory.mainInventory.length; i++)
+			for(int i = 9; i < player.inventory.mainInventory.size(); i++)
 			{
-				ItemStack stack = player.inventory.mainInventory[i];
+				ItemStack stack = player.inventory.mainInventory.get(i);
 				
-				if(player.inventory instanceof BigInventoryPlayer && (i >= ((BigInventoryPlayer)player.inventory).getUnlockedSlots() || i - 9 >= InfiniteInvo.II_Settings.invoSize) && !event.entityLiving.worldObj.isRemote && !player.capabilities.isCreativeMode)
+				if(player.inventory instanceof BigInventoryPlayer && (i >= ((BigInventoryPlayer)player.inventory).getUnlockedSlots() || i - 9 >= InfiniteInvo.II_Settings.invoSize) && !event.getEntityLiving().world.isRemote && !player.capabilities.isCreativeMode)
 				{
 					if(stack != null && stack.getItem() != InfiniteInvo.locked)
 					{
@@ -148,7 +148,7 @@ public class EventHandler
 					continue;
 				}
 				
-				if(stack != null && stack.getItem() == Items.cooked_porkchop && stack.stackSize >= stack.getMaxStackSize())
+				if(stack != null && stack.getItem() == Items.COOKED_PORKCHOP && stack.getCount() >= stack.getMaxStackSize())
 				{
 					continue;
 				} else
@@ -157,12 +157,12 @@ public class EventHandler
 				}
 			}
 			
-			if(!event.entityLiving.isEntityAlive())
+			if(!event.getEntityLiving().isEntityAlive())
 			{
-				if(!InfiniteInvo.II_Settings.keepUnlocks && !event.entityLiving.worldObj.getGameRules().getGameRuleBooleanValue("keepInventory"))
+				if(!InfiniteInvo.II_Settings.keepUnlocks && !event.getEntityLiving().world.getGameRules().getBoolean(("keepInventory")))
 				{
-					unlockCache.remove(event.entityLiving.getCommandSenderName());
-					unlockCache.remove(event.entityLiving.getUniqueID().toString());
+					unlockCache.remove(event.getEntityLiving().getCommandSenderEntity().getName());
+					unlockCache.remove(event.getEntityLiving().getUniqueID().toString());
 				}
 			}
 			
@@ -172,17 +172,17 @@ public class EventHandler
 	@SubscribeEvent
 	public void onEntityDeath(LivingDeathEvent event)
 	{
-		if(event.entityLiving instanceof EntityPlayer)
+		if(event.getEntityLiving() instanceof EntityPlayer)
 		{
-			if(!InfiniteInvo.II_Settings.keepUnlocks && !event.entityLiving.worldObj.getGameRules().getGameRuleBooleanValue("keepInventory"))
+			if(!InfiniteInvo.II_Settings.keepUnlocks && !event.getEntityLiving().world.getGameRules().getBoolean("keepInventory"))
 			{
-				unlockCache.remove(event.entityLiving.getCommandSenderName());
-				unlockCache.remove(event.entityLiving.getUniqueID().toString());
+				unlockCache.remove(event.getEntityLiving().getCommandSenderEntity().getName());
+				unlockCache.remove(event.getEntityLiving().getUniqueID().toString());
 			}
 			
-			if(!event.entityLiving.worldObj.isRemote && event.entityLiving.worldObj.getGameRules().getGameRuleBooleanValue("keepInventory"))
+			if(!event.getEntityLiving().world.isRemote && event.getEntityLiving().world.getGameRules().getBoolean("keepInventory"))
 			{
-				InventoryPersistProperty.keepInvoCache.put(event.entityLiving.getUniqueID(), ((EntityPlayer)event.entityLiving).inventory.writeToNBT(new NBTTagList()));
+				InventoryPersistProperty.keepInvoCache.put(event.getEntityLiving().getUniqueID(), ((EntityPlayer)event.getEntityLiving()).inventory.writeToNBT(new NBTTagList()));
 			}
 		}
 	}
@@ -237,7 +237,7 @@ public class EventHandler
 			((GuiBigInventory)event.getGui()).redoButtons = true;
 		} else if(event.getGui() instanceof GuiContainer)
 		{
-			GuiContainer gui = (GuiContainer)event.gui;
+			GuiContainer gui = (GuiContainer)event.getGui();
 			Container container = gui.inventorySlots;
 			
 			event.getButtonList().add(new InvoScrollBar(256, 0, 0, 1, 1, "", container, gui));
@@ -255,9 +255,9 @@ public class EventHandler
 	@SubscribeEvent
 	public void onWorldLoad(WorldEvent.Load event)
 	{
-		if(!event.getWorld().isRemote && worldDir == null && MinecraftServer.getServer().isServerRunning())
+		if(!event.getWorld().isRemote && worldDir == null && Minecraft.getMinecraft().player.getServer().isServerRunning())
 		{
-			MinecraftServer server = MinecraftServer.getServer();
+			MinecraftServer server = Minecraft.getMinecraft().player.getServer();
 			
 			if(InfiniteInvo.proxy.isClient())
 			{
@@ -275,7 +275,7 @@ public class EventHandler
 	@SubscribeEvent
 	public void onWorldSave(WorldEvent.Save event)
 	{
-		if(!event.getWorld().isRemote && worldDir != null && MinecraftServer.getServer().isServerRunning())
+		if(!event.getWorld().isRemote && worldDir != null && Minecraft.getMinecraft().player.getServer().isServerRunning())
 		{
 			new File(worldDir, "data/").mkdirs();
 			SaveCache(new File(worldDir, "data/SlotUnlockCache"));
@@ -285,7 +285,7 @@ public class EventHandler
 	@SubscribeEvent
 	public void onWorldUnload(WorldEvent.Unload event)
 	{
-		if(!event.getWorld().isRemote && worldDir != null && !MinecraftServer.getServer().isServerRunning())
+		if(!event.getWorld().isRemote && worldDir != null && Minecraft.getMinecraft().player.getServer().isServerRunning())
 		{
 			new File(worldDir, "data/").mkdirs();
 			SaveCache(new File(worldDir, "data/SlotUnlockCache"));

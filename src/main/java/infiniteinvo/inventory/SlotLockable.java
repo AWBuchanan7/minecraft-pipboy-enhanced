@@ -21,7 +21,7 @@ public class SlotLockable extends Slot
 	}
 	
 	@Override
-	public void onPickupFromSlot(EntityPlayer player, ItemStack stack)
+	public ItemStack onTake(EntityPlayer player, ItemStack stack)
     {
 		if(stack != null && stack.getItem() == InfiniteInvo.locked)
 		{
@@ -29,6 +29,8 @@ public class SlotLockable extends Slot
 		}
 		
         this.onSlotChanged();
+        
+        return stack;
     }
 	
 	@Override
