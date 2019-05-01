@@ -5,8 +5,8 @@ import infiniteinvo.core.InvoPacket;
 import infiniteinvo.handlers.EventHandler;
 import infiniteinvo.handlers.II_UpdateNotification;
 import net.minecraftforge.common.MinecraftForge;
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.relauncher.Side;
+import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.relauncher.Side;
 
 public class CommonProxy
 {

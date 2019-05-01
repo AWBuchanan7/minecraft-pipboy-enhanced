@@ -4,20 +4,22 @@ import java.util.concurrent.Callable;
 
 import org.apache.logging.log4j.Level;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import infiniteinvo.core.InfiniteInvo.II_Settings;
 import infiniteinvo.core.InfiniteInvo;
 import net.minecraft.crash.CrashReport;
 import net.minecraft.crash.CrashReportCategory;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
-import net.minecraft.util.MathHelper;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.ReportedException;
+import net.minecraft.util.math.MathHelper;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class BigInventoryPlayer extends InventoryPlayer
 {
@@ -27,19 +29,21 @@ public class BigInventoryPlayer extends InventoryPlayer
 	public BigInventoryPlayer(EntityPlayer player)
 	{
 		super(player);
-		this.mainInventory = new ItemStack[MathHelper.clamp_int(InfiniteInvo.II_Settings.invoSize, 27, Integer.MAX_VALUE - 100) + 9];
+//		this.mainInventory = NonNullList.create();
+		
+		this.mainInventory.add(MathHelper.clamp(InfiniteInvo.II_Settings.invoSize, 27, Integer.MAX_VALUE - 100) + 9, new ItemStack(Items.AIR));
 		
 		if(player.inventory != null)
 		{
-			ItemStack[] oldMain = player.inventory.mainInventory;
-			ItemStack[] oldArmor = player.inventory.armorInventory;
+			NonNullList<ItemStack> oldMain = player.inventory.mainInventory;
+			NonNullList<ItemStack> oldArmor = player.inventory.armorInventory;
 			
-			for(int i = 0; i < this.mainInventory.length && i < oldMain.length; i++)
+			for(int i = 0; i < this.mainInventory.size() && i < oldMain.size(); i++)
 			{
-				this.mainInventory[i] = oldMain[i];
+				this.mainInventory.set(i, oldMain.get(i));
 			}
 			
-			this.armorInventory = oldArmor;
+//			this.armorInventory = oldArmor;
 		}
 	}
 	
@@ -52,7 +56,7 @@ public class BigInventoryPlayer extends InventoryPlayer
 	@Override
 	public void setInventorySlotContents(int index, ItemStack stack)
     {
-		if(index < 0 || index >= this.armorInventory.length + this.mainInventory.length)
+		if(index < 0 || index >= this.armorInventory.size() + this.mainInventory.size())
 		{
 			InfiniteInvo.logger.log(Level.ERROR, "Tried to set item stack to invalid inventory slot index " + index, new IndexOutOfBoundsException());
 			return;
@@ -63,7 +67,7 @@ public class BigInventoryPlayer extends InventoryPlayer
 	
 	public int getUnlockedSlots()
 	{
-		int unlocked = InfiniteInvo.II_Settings.xpUnlock && !this.player.capabilities.isCreativeMode? InfiniteInvo.II_Settings.unlockedSlots + 9 + this.player.getEntityData().getInteger("INFINITE_INVO_UNLOCKED") : this.mainInventory.length;
+		int unlocked = InfiniteInvo.II_Settings.xpUnlock && !this.player.capabilities.isCreativeMode? InfiniteInvo.II_Settings.unlockedSlots + 9 + this.player.getEntityData().getInteger("INFINITE_INVO_UNLOCKED") : this.mainInventory.size();
 		
 		unlocked = unlocked <= this.mainInventory.length? unlocked : this.mainInventory.length;
 		
@@ -86,7 +90,7 @@ public class BigInventoryPlayer extends InventoryPlayer
     /**
      * stores an itemstack in the users inventory
      */
-    private int storeItemStack(ItemStack p_70432_1_)
+    public int storeItemStack(ItemStack p_70432_1_)
     {
         for (int i = 0; i < this.getUnlockedSlots(); ++i)
         {
@@ -387,7 +391,7 @@ public class BigInventoryPlayer extends InventoryPlayer
 	@Override
     public void readFromNBT(NBTTagList p_70443_1_)
     {
-        this.mainInventory = new ItemStack[MathHelper.clamp_int(InfiniteInvo.II_Settings.invoSize, 27, Integer.MAX_VALUE - 100) + 9];
+        this.mainInventory = new ItemStack[MathHelper.clamp(InfiniteInvo.II_Settings.invoSize, 27, Integer.MAX_VALUE - 100) + 9];
         this.armorInventory = new ItemStack[armorInventory == null? 4 : armorInventory.length]; // Just in case it isn't standard size
         
         for (int i = 0; i < p_70443_1_.tagCount(); ++i)

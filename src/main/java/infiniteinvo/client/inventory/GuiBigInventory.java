@@ -12,8 +12,8 @@ import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.gui.inventory.GuiInventory;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.MathHelper;
 
 public class GuiBigInventory extends GuiInventory
 {
@@ -58,8 +58,8 @@ public class GuiBigInventory extends GuiInventory
 	{
 		if(unlock != null)
 		{
-			unlock.xPosition = this.guiLeft + 87;
-			unlock.yPosition = this.guiTop + 7;
+			unlock.x = this.guiLeft + 87;
+			unlock.y = this.guiTop + 7;
 		}
 		
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
@@ -109,7 +109,7 @@ public class GuiBigInventory extends GuiInventory
         
         this.drawTexturedModalRect(k + 169 + (InfiniteInvo.II_Settings.extraColumns * 18), l + 137 + (InfiniteInvo.II_Settings.extraRows * 18), 187 + barW, 137, 16 - barW, 29);
         
-        func_147046_a(k + 51, l + 75, 30, (float)(k + 51) - (float)p_146976_2_, (float)(l + 75 - 50) - (float)p_146976_3_, this.mc.thePlayer);
+        func_147046_a(k + 51, l + 75, 30, (float)(k + 51) - (float)p_146976_2_, (float)(l + 75 - 50) - (float)p_146976_3_, this.mc.player);
         
         if(redoButtons)
         {
@@ -118,20 +118,20 @@ public class GuiBigInventory extends GuiInventory
 			{
 				GuiButton button = (GuiButton)buttonList.get(i);
 				
-				if(button.xPosition > this.width/2)
+				if(button.x > this.width/2)
 				{
-					button.xPosition += (InfiniteInvo.II_Settings.extraColumns * 9) + 4;
-				} else if(button.xPosition < this.width/2)
+					button.x += (InfiniteInvo.II_Settings.extraColumns * 9) + 4;
+				} else if(button.x < this.width/2)
 				{
-					button.xPosition -= (InfiniteInvo.II_Settings.extraColumns * 9) + 4;
+					button.x -= (InfiniteInvo.II_Settings.extraColumns * 9) + 4;
 				}
 				
-				if(button.yPosition > this.height/2)
+				if(button.y > this.height/2)
 				{
-					button.yPosition += (InfiniteInvo.II_Settings.extraRows * 9);
-				} else if(button.yPosition < this.height/2)
+					button.y += (InfiniteInvo.II_Settings.extraRows * 9);
+				} else if(button.y < this.height/2)
 				{
-					button.yPosition -= (InfiniteInvo.II_Settings.extraRows * 9);
+					button.y -= (InfiniteInvo.II_Settings.extraRows * 9);
 				}
 			}
         }
@@ -141,15 +141,15 @@ public class GuiBigInventory extends GuiInventory
 	@Override
 	public void drawGuiContainerForegroundLayer(int p_146979_1_, int p_146979_2_)
 	{
-        this.fontRendererObj.drawString(I18n.format("container.crafting", new Object[0]), 87, 32, 4210752);
+        this.fontRenderer.drawString(I18n.format("container.crafting", new Object[0]), 87, 32, 4210752);
 		
 		if(container != null)
 		{
 	        GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 			this.mc.getTextureManager().bindTexture(new ResourceLocation("infiniteinvo", "textures/gui/adjustable_gui.png"));
 			
-	        int maxPos = MathHelper.ceiling_float_int((float)InfiniteInvo.II_Settings.invoSize/(float)(9 + InfiniteInvo.II_Settings.extraColumns)) - (3 + InfiniteInvo.II_Settings.extraRows);
-			int barPos = maxPos > 0? MathHelper.floor_float((float)container.scrollPos / (float)maxPos * (18F * (3F + (float)InfiniteInvo.II_Settings.extraRows) - 8F)) : 0;
+	        int maxPos = MathHelper.ceil((float)InfiniteInvo.II_Settings.invoSize/(float)(9 + InfiniteInvo.II_Settings.extraColumns)) - (3 + InfiniteInvo.II_Settings.extraRows);
+			int barPos = maxPos > 0? MathHelper.floor((float)container.scrollPos / (float)maxPos * (18F * (3F + (float)InfiniteInvo.II_Settings.extraRows) - 8F)) : 0;
 			
 			if((InfiniteInvo.II_Settings.extraColumns + 9) * (InfiniteInvo.II_Settings.extraRows + 3) < InfiniteInvo.II_Settings.invoSize)
 			{
@@ -194,7 +194,7 @@ public class GuiBigInventory extends GuiInventory
         		container.scrollPos -= scrollDir;
         	} else if(Mouse.isButtonDown(0))
         	{
-                final ScaledResolution scaledresolution = new ScaledResolution(this.mc, this.mc.displayWidth, this.mc.displayHeight);
+                final ScaledResolution scaledresolution = new ScaledResolution(this.mc);
                 int i = scaledresolution.getScaledWidth();
                 int j = scaledresolution.getScaledHeight();
                 int mouseX = Mouse.getX() * i / this.mc.displayWidth;
@@ -207,8 +207,8 @@ public class GuiBigInventory extends GuiInventory
         		if((flag || dragging == 1) && dragging != -1)
         		{
         			dragging = 1;
-        			int maxScroll = MathHelper.ceiling_float_int((float)InfiniteInvo.II_Settings.invoSize/(float)(9 + InfiniteInvo.II_Settings.extraColumns)) - (3 + InfiniteInvo.II_Settings.extraRows);
-        			container.scrollPos = MathHelper.clamp_int(Math.round((float)(mouseY - sy) / (float)(18 * (3 + InfiniteInvo.II_Settings.extraRows)) * (float)maxScroll), 0, maxScroll);
+        			int maxScroll = MathHelper.ceil((float)InfiniteInvo.II_Settings.invoSize/(float)(9 + InfiniteInvo.II_Settings.extraColumns)) - (3 + InfiniteInvo.II_Settings.extraRows);
+        			container.scrollPos = MathHelper.clamp(Math.round((float)(mouseY - sy) / (float)(18 * (3 + InfiniteInvo.II_Settings.extraRows)) * (float)maxScroll), 0, maxScroll);
         		} else
         		{
         			dragging = -1;

@@ -2,10 +2,6 @@ package infiniteinvo.core;
 
 import org.apache.logging.log4j.Level;
 
-import cpw.mods.fml.common.network.ByteBufUtils;
-import cpw.mods.fml.common.network.simpleimpl.IMessage;
-import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
-import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import infiniteinvo.handlers.InfiniteInvoEventHandler;
 import infiniteinvo.inventory.BigInventoryPlayer;
 import infiniteinvo.inventory.SlotLockable;
@@ -17,6 +13,10 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.WorldServer;
+import net.minecraftforge.fml.common.network.ByteBufUtils;
+import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
+import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
+import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
 public class InvoPacket implements IMessage
 {
@@ -84,11 +84,11 @@ public class InvoPacket implements IMessage
 						unlocked++;
 						player.getEntityData().setInteger("INFINITE_INVO_UNLOCKED", unlocked);
 						
-						InfiniteInvoEventHandler.unlockCache.put(player.getCommandSenderName(), unlocked);
+						InfiniteInvoEventHandler.unlockCache.put(player.getCommandSenderEntity().getName(), unlocked);
 						
 						NBTTagCompound replyTags = new NBTTagCompound();
 						replyTags.setInteger("ID", 0);
-						replyTags.setString("Player", player.getCommandSenderName());
+						replyTags.setString("Player", player.getCommandSenderEntity());
 						replyTags.setInteger("Unlocked", unlocked);
 						return new InvoPacket(replyTags);
 						
@@ -113,13 +113,13 @@ public class InvoPacket implements IMessage
 					
 					int unlocked = 0;
 					
-					if(!player.getEntityData().hasKey("INFINITE_INVO_UNLOCKED") && (InfiniteInvoEventHandler.unlockCache.containsKey(player.getCommandSenderName()) || InfiniteInvoEventHandler.unlockCache.containsKey(player.getUniqueID().toString())))
+					if(!player.getEntityData().hasKey("INFINITE_INVO_UNLOCKED") && (InfiniteInvoEventHandler.unlockCache.containsKey(player.getCommandSenderEntity()) || InfiniteInvoEventHandler.unlockCache.containsKey(player.getUniqueID().toString())))
 					{
-						unlocked = InfiniteInvoEventHandler.unlockCache.containsKey(player.getCommandSenderName())? InfiniteInvoEventHandler.unlockCache.get(player.getCommandSenderName()) : InfiniteInvoEventHandler.unlockCache.get(player.getUniqueID().toString());
-						if(InfiniteInvoEventHandler.unlockCache.containsKey(player.getCommandSenderName()))
+						unlocked = InfiniteInvoEventHandler.unlockCache.containsKey(player.getCommandSenderEntity())? InfiniteInvoEventHandler.unlockCache.get(player.getCommandSenderEntity()) : InfiniteInvoEventHandler.unlockCache.get(player.getUniqueID().toString());
+						if(InfiniteInvoEventHandler.unlockCache.containsKey(player.getCommandSenderEntity()))
 						{
 							InfiniteInvoEventHandler.unlockCache.put(player.getUniqueID().toString(), unlocked);
-							InfiniteInvoEventHandler.unlockCache.remove(player.getCommandSenderName());
+							InfiniteInvoEventHandler.unlockCache.remove(player.getCommandSenderEntity());
 						}
 						player.getEntityData().setInteger("INFINITE_INVO_UNLOCKED", unlocked);
 					} else
@@ -131,7 +131,7 @@ public class InvoPacket implements IMessage
 					
 					NBTTagCompound reply = new NBTTagCompound();
 					reply.setInteger("ID", 0);
-					reply.setString("Player", player.getCommandSenderName());
+					reply.setString("Player", player.getCommandSenderEntity());
 					reply.setInteger("Unlocked", unlocked);
 					return new InvoPacket(reply);
 				} else if(message.tags.getInteger("ID") == 2) // Update inventory scroll
@@ -233,9 +233,9 @@ public class InvoPacket implements IMessage
 				{
 					EntityPlayer player = Minecraft.getMinecraft().thePlayer;
 					
-					if(!message.tags.hasKey("Player") || !message.tags.getString("Player").equals(player.getCommandSenderName()))
+					if(!message.tags.hasKey("Player") || !message.tags.getString("Player").equals(player.getCommandSenderEntity()))
 					{
-						InfiniteInvo.logger.log(Level.ERROR, "Server sent packet to the wrong player! Intended target: " + message.tags.getString("Player") + ", Recipient: " + player.getCommandSenderName());
+						InfiniteInvo.logger.log(Level.ERROR, "Server sent packet to the wrong player! Intended target: " + message.tags.getString("Player") + ", Recipient: " + player.getCommandSenderEntity());
 						return null;
 					}
 					

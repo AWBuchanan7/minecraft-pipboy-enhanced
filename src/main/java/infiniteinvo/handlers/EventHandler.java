@@ -31,19 +31,19 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.client.event.GuiOpenEvent;
 import net.minecraftforge.client.event.GuiScreenEvent.InitGuiEvent;
+import net.minecraftforge.client.event.GuiScreenEvent.MouseInputEvent;
 import net.minecraftforge.event.entity.EntityEvent.EntityConstructing;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.item.ItemTossEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.event.world.WorldEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.PlayerEvent.ItemPickupEvent;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+
 import org.apache.logging.log4j.Level;
-import cpw.mods.fml.client.event.ConfigChangedEvent;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.common.gameevent.InputEvent.MouseInputEvent;
-import cpw.mods.fml.common.gameevent.PlayerEvent.ItemPickupEvent;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 public class EventHandler
 {
@@ -54,7 +54,7 @@ public class EventHandler
 	@SubscribeEvent
 	public void onEntityConstruct(EntityConstructing event) // More reliable than on entity join
 	{
-		if(event.entity instanceof EntityPlayer)
+		if(event.getEntity() instanceof EntityPlayer)
 		{
 			EntityPlayer player = (EntityPlayer)event.entity;
 			
@@ -68,7 +68,7 @@ public class EventHandler
 	@SubscribeEvent
 	public void onEntityJoinWorld(EntityJoinWorldEvent event)
 	{
-		if(event.entity instanceof EntityPlayer)
+		if(event.getEntity() instanceof EntityPlayer)
 		{
 			EntityPlayer player = (EntityPlayer)event.entity;
 			
@@ -77,19 +77,19 @@ public class EventHandler
 				InventoryPersistProperty.get(player).onJoinWorld();
 			}
 			
-			if(event.world.isRemote)
+			if(event.getWorld().isRemote)
 			{
 				NBTTagCompound requestTags = new NBTTagCompound();
 				requestTags.setInteger("ID", 1);
-				requestTags.setInteger("World", event.world.provider.dimensionId);
-				requestTags.setString("Player", player.getCommandSenderName());
+				requestTags.setInteger("World", event.getWorld().provider.dimensionId);
+				requestTags.setString("Player", player.getCommandSenderEntity().getName());
 				InfiniteInvo.instance.network.sendToServer(new InvoPacket(requestTags));
 			}
-		} else if(event.entity instanceof EntityItem)
+		} else if(event.getEntity() instanceof EntityItem)
 		{
-			EntityItem itemDrop = (EntityItem)event.entity;
+			EntityItem itemDrop = (EntityItem)event.getEntity();
 			
-			if(itemDrop.getEntityItem() != null && itemDrop.getEntityItem().getItem() == InfiniteInvo.locked)
+			if(itemDrop.getItem() != null && itemDrop.getItem().getItem() == InfiniteInvo.locked)
 			{
 				itemDrop.setDead();
 				event.setCanceled(true);
@@ -98,19 +98,20 @@ public class EventHandler
 		}
 	}
 	
+	@SuppressWarnings("deprecation")
 	@SubscribeEvent
 	public void onItemPickup(ItemPickupEvent event)
 	{
-		if(event.pickedUp != null && event.pickedUp.getEntityItem() != null && event.pickedUp.getEntityItem().getItem() == Items.bone && !event.pickedUp.worldObj.isRemote)
+		if(event.pickedUp != null && event.pickedUp.getItem() != null && event.pickedUp.getItem().getItem() == Items.bone && !event.pickedUp.world.isRemote)
 		{
-			if(!event.player.getCommandSenderName().equals(event.pickedUp.func_145800_j()));
+			if(!event.player.getCommandSenderEntity().getName().equals(event.pickedUp.func_145800_j()));
 			{
 				if(event.pickedUp.func_145800_j() == null || event.pickedUp.func_145800_j().isEmpty())
 				{
 					return;
 				}
 				
-				EntityPlayer player = event.pickedUp.worldObj.getPlayerEntityByName(event.pickedUp.func_145800_j());
+				EntityPlayer player = event.pickedUp.world.getPlayerEntityByName(event.pickedUp.func_145800_j());
 				
 			}
 		}
@@ -190,14 +191,14 @@ public class EventHandler
 	@SubscribeEvent
 	public void onGuiOpen(GuiOpenEvent event)
 	{
-		if(event.gui != null && event.gui.getClass() == GuiInventory.class && !(event.gui instanceof GuiBigInventory))
+		if(event.getGui() != null && event.getGui().getClass() == GuiInventory.class && !(event.getGui() instanceof GuiBigInventory))
 		{
-			event.gui = new GuiBigInventory(Minecraft.getMinecraft().thePlayer);
-		} else if(event.gui == null && Minecraft.getMinecraft().thePlayer.inventoryContainer instanceof BigContainerPlayer)
+			event.setGui(new GuiBigInventory(Minecraft.getMinecraft().player));
+		} else if(event.getGui() == null && Minecraft.getMinecraft().player.inventoryContainer instanceof BigContainerPlayer)
 		{
 			// Reset scroll and inventory slot positioning to make sure it doesn't screw up later
-			((BigContainerPlayer)Minecraft.getMinecraft().thePlayer.inventoryContainer).scrollPos = 0;
-			((BigContainerPlayer)Minecraft.getMinecraft().thePlayer.inventoryContainer).UpdateScroll();
+			((BigContainerPlayer)Minecraft.getMinecraft().player.inventoryContainer).scrollPos = 0;
+			((BigContainerPlayer)Minecraft.getMinecraft().player.inventoryContainer).UpdateScroll();
 		}
 	}
 	
@@ -206,14 +207,14 @@ public class EventHandler
 	public void onMouseInput(MouseInputEvent event)
 	{
 		Minecraft mc = Minecraft.getMinecraft();
-		EntityPlayer player = mc.thePlayer;
+		EntityPlayer player = mc.player;
 		KeyBinding pickBlock = mc.gameSettings.keyBindPickBlock;
 		
 		if(pickBlock.isPressed() && mc.objectMouseOver != null && InfiniteInvo.II_Settings.invoSize > 27)
 		{
 			KeyBinding.setKeyBindState(pickBlock.getKeyCode(), false);
 			
-			if (!net.minecraftforge.common.ForgeHooks.onPickBlock(mc.objectMouseOver, player, mc.theWorld))
+			if (!net.minecraftforge.common.ForgeHooks.onPickBlock(mc.objectMouseOver, player, mc.world))
 			{
 				return;
 			}
@@ -231,22 +232,22 @@ public class EventHandler
 	@SubscribeEvent
 	public void onGuiPostInit(InitGuiEvent.Post event)
 	{
-		if(event.gui instanceof GuiBigInventory)
+		if(event.getGui() instanceof GuiBigInventory)
 		{
-			((GuiBigInventory)event.gui).redoButtons = true;
-		} else if(event.gui instanceof GuiContainer)
+			((GuiBigInventory)event.getGui()).redoButtons = true;
+		} else if(event.getGui() instanceof GuiContainer)
 		{
 			GuiContainer gui = (GuiContainer)event.gui;
 			Container container = gui.inventorySlots;
 			
-			event.buttonList.add(new InvoScrollBar(256, 0, 0, 1, 1, "", container, gui));
+			event.getButtonList().add(new InvoScrollBar(256, 0, 0, 1, 1, "", container, gui));
 			
-			if(event.gui instanceof GuiInventory)
+			if(event.getGui() instanceof GuiInventory)
 			{
-				final ScaledResolution scaledresolution = new ScaledResolution(event.gui.mc, event.gui.mc.displayWidth, event.gui.mc.displayHeight);
+				final ScaledResolution scaledresolution = new ScaledResolution(event.getGui().mc);
                 int i = scaledresolution.getScaledWidth();
                 int j = scaledresolution.getScaledHeight();
-				event.buttonList.add(new GuiButtonUnlockSlot(event.buttonList.size(), i/2 - 50, j - 40, 100, 20, event.gui.mc.thePlayer));
+				event.getButtonList().add(new GuiButtonUnlockSlot(event.getButtonList().size(), i/2 - 50, j - 40, 100, 20, event.getGui().mc.player));
 			}
 		}
 	}
@@ -254,7 +255,7 @@ public class EventHandler
 	@SubscribeEvent
 	public void onWorldLoad(WorldEvent.Load event)
 	{
-		if(!event.world.isRemote && worldDir == null && MinecraftServer.getServer().isServerRunning())
+		if(!event.getWorld().isRemote && worldDir == null && MinecraftServer.getServer().isServerRunning())
 		{
 			MinecraftServer server = MinecraftServer.getServer();
 			
@@ -274,7 +275,7 @@ public class EventHandler
 	@SubscribeEvent
 	public void onWorldSave(WorldEvent.Save event)
 	{
-		if(!event.world.isRemote && worldDir != null && MinecraftServer.getServer().isServerRunning())
+		if(!event.getWorld().isRemote && worldDir != null && MinecraftServer.getServer().isServerRunning())
 		{
 			new File(worldDir, "data/").mkdirs();
 			SaveCache(new File(worldDir, "data/SlotUnlockCache"));
@@ -284,7 +285,7 @@ public class EventHandler
 	@SubscribeEvent
 	public void onWorldUnload(WorldEvent.Unload event)
 	{
-		if(!event.world.isRemote && worldDir != null && !MinecraftServer.getServer().isServerRunning())
+		if(!event.getWorld().isRemote && worldDir != null && !MinecraftServer.getServer().isServerRunning())
 		{
 			new File(worldDir, "data/").mkdirs();
 			SaveCache(new File(worldDir, "data/SlotUnlockCache"));

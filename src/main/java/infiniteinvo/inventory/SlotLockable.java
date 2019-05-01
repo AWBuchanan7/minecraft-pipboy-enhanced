@@ -91,11 +91,11 @@ public class SlotLockable extends Slot
         return this.inventory.decrStackSize(this.slotIndex, p_75209_1_);
     }
 
-    @Override
-    public boolean isSlotInInventory(IInventory p_75217_1_, int p_75217_2_)
-    {
-        return p_75217_1_ == this.inventory && p_75217_2_ == this.slotIndex;
-    }
+//    @Override
+//    public boolean isSlotInInventory(IInventory p_75217_1_, int p_75217_2_)
+//    {
+//        return p_75217_1_ == this.inventory && p_75217_2_ == this.slotIndex;
+//    }
 	
 	@Override
 	public int getSlotIndex()

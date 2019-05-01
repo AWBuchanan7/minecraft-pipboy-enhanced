@@ -2,7 +2,7 @@ package infiniteinvo.core.proxies;
 
 import infiniteinvo.core.InfiniteInvo;
 import infiniteinvo.core.InvoPacket;
-import cpw.mods.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.Side;
 
 public class ClientProxy extends CommonProxy
 {
