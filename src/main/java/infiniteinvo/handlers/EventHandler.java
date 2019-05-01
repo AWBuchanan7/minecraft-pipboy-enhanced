@@ -102,16 +102,16 @@ public class EventHandler
 	@SubscribeEvent
 	public void onItemPickup(ItemPickupEvent event)
 	{
-		if(event.pickedUp != null && event.pickedUp.getItem() != null && event.pickedUp.getItem().getItem() == Items.bone && !event.pickedUp.world.isRemote)
+		if(event.pickedUp != null && event.pickedUp.getItem() != null && event.pickedUp.getItem().getItem() == Items.BONE && !event.pickedUp.world.isRemote)
 		{
-			if(!event.player.getCommandSenderEntity().getName().equals(event.pickedUp.func_145800_j()));
+			if(!event.player.getCommandSenderEntity().getName().equals(event.pickedUp.getName()));
 			{
-				if(event.pickedUp.func_145800_j() == null || event.pickedUp.func_145800_j().isEmpty())
+				if(event.pickedUp.getName() == null || event.pickedUp.getName().isEmpty())
 				{
 					return;
 				}
 				
-				EntityPlayer player = event.pickedUp.world.getPlayerEntityByName(event.pickedUp.func_145800_j());
+				EntityPlayer player = event.pickedUp.world.getPlayerEntityByName(event.pickedUp.getName());
 				
 			}
 		}

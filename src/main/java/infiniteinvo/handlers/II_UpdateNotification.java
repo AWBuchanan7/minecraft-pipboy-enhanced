@@ -1,8 +1,8 @@
 package infiniteinvo.handlers;
 
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.common.gameevent.PlayerEvent;
 import infiniteinvo.core.InfiniteInvo;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 
 public class II_UpdateNotification
 {
