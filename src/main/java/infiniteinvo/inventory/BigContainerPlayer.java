@@ -4,19 +4,20 @@ import org.apache.logging.log4j.Level;
 
 import com.google.common.collect.Lists;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import infiniteinvo.core.InfiniteInvo.II_Settings;
 import infiniteinvo.core.InfiniteInvo;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ContainerPlayer;
+import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.inventory.Slot;
 import net.minecraft.inventory.SlotCrafting;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.MathHelper;
+import net.minecraft.util.math.MathHelper;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class BigContainerPlayer extends ContainerPlayer
 {
@@ -25,7 +26,7 @@ public class BigContainerPlayer extends ContainerPlayer
 	/**
 	 * A more organised version of 'inventorySlots' that doesn't include the hotbar
 	 */
-	Slot[] slots = new Slot[MathHelper.clamp_int(InfiniteInvo.II_Settings.invoSize, 27, Integer.MAX_VALUE - 100)];
+	Slot[] slots = new Slot[MathHelper.clamp(InfiniteInvo.II_Settings.invoSize, 27, Integer.MAX_VALUE - 100)];
 	Slot[] hotbar = new Slot[9];
 	Slot[] crafting = new Slot[4];
 	Slot result;
@@ -103,7 +104,23 @@ public class BigContainerPlayer extends ContainerPlayer
 				public boolean isItemValid(ItemStack stack)
 				{
 					if (stack == null) return false;
-					return stack.getItem().isValidArmor(stack, k, thePlayer);
+					switch(k) {
+					case 0:
+						return stack.getItem().isValidArmor(stack, EntityEquipmentSlot.MAINHAND, thePlayer);
+					case 1:
+						return stack.getItem().isValidArmor(stack, EntityEquipmentSlot.OFFHAND, thePlayer);
+					case 2:
+						return stack.getItem().isValidArmor(stack, EntityEquipmentSlot.FEET, thePlayer);
+					case 3:
+						return stack.getItem().isValidArmor(stack, EntityEquipmentSlot.LEGS, thePlayer);
+					case 4:
+						return stack.getItem().isValidArmor(stack, EntityEquipmentSlot.CHEST, thePlayer);
+					case 5:
+						return stack.getItem().isValidArmor(stack, EntityEquipmentSlot.HEAD, thePlayer);
+					default:
+						return false;
+					}
+					
 				}
 				@SideOnly(Side.CLIENT)
 				public String getSlotTexture()
@@ -135,7 +152,7 @@ public class BigContainerPlayer extends ContainerPlayer
 			// Add all the previous inventory slots to the organised array
 			Slot os = (Slot)this.inventorySlots.get(i);
 
-			Slot ns = new SlotLockable(os.inventory, os.getSlotIndex(), os.xDisplayPosition, os.yDisplayPosition);
+			Slot ns = new SlotLockable(os.inventory, os.getSlotIndex(), os.xPos, os.yPos);
 			ns.slotNumber = os.slotNumber;
 			this.inventorySlots.set(i, ns);
 			ns.onSlotChanged();
@@ -161,8 +178,8 @@ public class BigContainerPlayer extends ContainerPlayer
 		 * Set display positon for the crafting "output" slot
 		 */
 		result = (Slot)this.inventorySlots.get(0);
-		result.xDisplayPosition = 153;
-		result.yDisplayPosition = 42;
+		result.xPos = 153;
+		result.yPos = 42;
 
 		/*
 		 * Set display positon for the crafting slots (initial four)
@@ -179,8 +196,8 @@ public class BigContainerPlayer extends ContainerPlayer
 		for(int i = 0; i < 4; i++) {
 			Slot hs = crafting[i];
 
-			hs.xDisplayPosition = 88 + (i%2) * 18 + shiftx;
-			hs.yDisplayPosition = 26 + (i/2) * 18 + shifty;
+			hs.xPos = 88 + (i%2) * 18 + shiftx;
+			hs.yPos = 26 + (i/2) * 18 + shifty;
 		}
 
 		/*
@@ -190,14 +207,14 @@ public class BigContainerPlayer extends ContainerPlayer
 		for(int i = 0; i < 9; i++)
 		{
 			Slot hs = hotbar[i];
-			hs.xDisplayPosition = 8 + (i * 18);
-			hs.yDisplayPosition = 142 + (18 * InfiniteInvo.II_Settings.extraRows);
+			hs.xPos = 8 + (i * 18);
+			hs.yPos = 142 + (18 * InfiniteInvo.II_Settings.extraRows);
 		}
 
 		/*
 		 * What was this again?
 		 */
-		for (int i = 3; i < MathHelper.ceiling_float_int((float)InfiniteInvo.II_Settings.invoSize/9F); ++i) {
+		for (int i = 3; i < MathHelper.ceil((float)InfiniteInvo.II_Settings.invoSize/9F); ++i) {
 			for (int j = 0; j < 9; ++j) {
 				if (j + (i * 9) >= InfiniteInvo.II_Settings.invoSize && InfiniteInvo.II_Settings.invoSize > 27) {
 					break;
@@ -238,15 +255,15 @@ public class BigContainerPlayer extends ContainerPlayer
 		Slot slot = super.getSlotFromInventory(invo, id);
 		if(slot == null) {
 			Exception e = new NullPointerException();
-			InfiniteInvo.logger.log(Level.FATAL, e.getStackTrace()[1].getClassName() + "." + e.getStackTrace()[1].getMethodName() + ":" + e.getStackTrace()[1].getLineNumber() + " is requesting slot " + id + " from inventory " + invo.getInventoryName() + " (" + invo.getClass().getName() + ") and got NULL!", e);
+			InfiniteInvo.logger.log(Level.FATAL, e.getStackTrace()[1].getClassName() + "." + e.getStackTrace()[1].getMethodName() + ":" + e.getStackTrace()[1].getLineNumber() + " is requesting slot " + id + " from inventory " + invo.getName() + " (" + invo.getClass().getName() + ") and got NULL!", e);
 		}
 		return slot;
 	}
 
 	public void UpdateScroll() {
-		if(scrollPos > MathHelper.ceiling_float_int((float)InfiniteInvo.II_Settings.invoSize/(float)(9 + InfiniteInvo.II_Settings.extraColumns)) - (3 + InfiniteInvo.II_Settings.extraRows))
+		if(scrollPos > MathHelper.ceil((float)InfiniteInvo.II_Settings.invoSize/(float)(9 + InfiniteInvo.II_Settings.extraColumns)) - (3 + InfiniteInvo.II_Settings.extraRows))
 		{
-			scrollPos = MathHelper.ceiling_float_int((float)InfiniteInvo.II_Settings.invoSize/(float)(9 + InfiniteInvo.II_Settings.extraColumns)) - (3 + InfiniteInvo.II_Settings.extraRows);
+			scrollPos = MathHelper.ceil((float)InfiniteInvo.II_Settings.invoSize/(float)(9 + InfiniteInvo.II_Settings.extraColumns)) - (3 + InfiniteInvo.II_Settings.extraRows);
 		}
 
 		if(scrollPos < 0)
@@ -254,7 +271,7 @@ public class BigContainerPlayer extends ContainerPlayer
 			scrollPos = 0;
 		}
 
-		for(int i = 0; i < MathHelper.ceiling_float_int((float)MathHelper.clamp_int(InfiniteInvo.II_Settings.invoSize, 27, Integer.MAX_VALUE)/(float)(9 + InfiniteInvo.II_Settings.extraColumns)); i++)
+		for(int i = 0; i < MathHelper.ceil((float)MathHelper.clamp(InfiniteInvo.II_Settings.invoSize, 27, Integer.MAX_VALUE)/(float)(9 + InfiniteInvo.II_Settings.extraColumns)); i++)
 		{
 			for (int j = 0; j < 9 + InfiniteInvo.II_Settings.extraColumns; ++j)
 			{
@@ -267,13 +284,13 @@ public class BigContainerPlayer extends ContainerPlayer
 					if(i >= scrollPos && i < scrollPos + 3 + InfiniteInvo.II_Settings.extraRows && index < invo.getUnlockedSlots() - 9 && index < InfiniteInvo.II_Settings.invoSize)
 					{
 						Slot s = slots[index];
-						s.xDisplayPosition = 8 + j * 18;
-						s.yDisplayPosition = 84 + (i - scrollPos) * 18;
+						s.xPos = 8 + j * 18;
+						s.yPos = 84 + (i - scrollPos) * 18;
 					} else
 					{
 						Slot s = slots[index];
-						s.xDisplayPosition = -999;
-						s.yDisplayPosition = -999;
+						s.xPos = -999;
+						s.yPos = -999;
 					}
 				}
 			}
@@ -318,9 +335,9 @@ public class BigContainerPlayer extends ContainerPlayer
 					return null;
 				}
 			}
-			else if (itemstack.getItem() instanceof ItemArmor && !((Slot)this.inventorySlots.get(5 + ((ItemArmor)itemstack.getItem()).armorType)).getHasStack()) // Inventory to armor
+			else if (itemstack.getItem() instanceof ItemArmor && !((Slot)this.inventorySlots.get(5 + ((ItemArmor)itemstack.getItem()).armorType.getIndex())).getHasStack()) // Inventory to armor
 			{
-				int j = 5 + ((ItemArmor)itemstack.getItem()).armorType;
+				int j = 5 + ((ItemArmor)itemstack.getItem()).armorType.getIndex();
 
 				if (!this.mergeItemStack(itemstack1, j, j + 1, false))
 				{
@@ -346,7 +363,7 @@ public class BigContainerPlayer extends ContainerPlayer
 				return null;
 			}
 
-			if (itemstack1.stackSize == 0)
+			if (itemstack1.getCount() == 0)
 			{
 				slot.putStack((ItemStack)null);
 			}
@@ -355,12 +372,12 @@ public class BigContainerPlayer extends ContainerPlayer
 				slot.onSlotChanged();
 			}
 
-			if (itemstack1.stackSize == itemstack.stackSize)
+			if (itemstack1.getCount() == itemstack.getCount())
 			{
 				return null;
 			}
 
-			slot.onPickupFromSlot(p_82846_1_, itemstack1);
+			slot.onTake(p_82846_1_, itemstack1);
 		}
 
 		return itemstack;
@@ -374,11 +391,11 @@ public class BigContainerPlayer extends ContainerPlayer
 
 		for (int i = 0; i < craftSize*craftSize; ++i)
 		{
-			ItemStack itemstack = this.craftMatrix.getStackInSlotOnClosing(i);
+			ItemStack itemstack = this.craftMatrix.getStackInSlot(i);
 
 			if (itemstack != null)
 			{
-				playerIn.dropPlayerItemWithRandomChoice(itemstack, false);
+				playerIn.dropItem(itemstack, false);
 			}
 		}
 

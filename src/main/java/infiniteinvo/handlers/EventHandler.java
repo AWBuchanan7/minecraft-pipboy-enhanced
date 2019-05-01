@@ -239,9 +239,9 @@ public class EventHandler
 	@SubscribeEvent
 	public void onWorldLoad(WorldEvent.Load event)
 	{
-		if(!event.getWorld().isRemote && worldDir == null && Minecraft.getMinecraft().player.getServer().isServerRunning())
+		if(!event.getWorld().isRemote && worldDir == null && event.getWorld().getMinecraftServer().isServerRunning())
 		{
-			MinecraftServer server = Minecraft.getMinecraft().player.getServer();
+			MinecraftServer server = event.getWorld().getMinecraftServer();
 			
 			if(InfiniteInvo.proxy.isClient())
 			{
@@ -259,7 +259,7 @@ public class EventHandler
 	@SubscribeEvent
 	public void onWorldSave(WorldEvent.Save event)
 	{
-		if(!event.getWorld().isRemote && worldDir != null && Minecraft.getMinecraft().player.getServer().isServerRunning())
+		if(!event.getWorld().isRemote && worldDir != null && event.getWorld().getMinecraftServer().isServerRunning())
 		{
 			new File(worldDir, "data/").mkdirs();
 			SaveCache(new File(worldDir, "data/SlotUnlockCache"));
@@ -269,7 +269,7 @@ public class EventHandler
 	@SubscribeEvent
 	public void onWorldUnload(WorldEvent.Unload event)
 	{
-		if(!event.getWorld().isRemote && worldDir != null && Minecraft.getMinecraft().player.getServer().isServerRunning())
+		if(!event.getWorld().isRemote && worldDir != null && event.getWorld().getMinecraftServer().isServerRunning())
 		{
 			new File(worldDir, "data/").mkdirs();
 			SaveCache(new File(worldDir, "data/SlotUnlockCache"));
