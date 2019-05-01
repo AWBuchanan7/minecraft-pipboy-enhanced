@@ -17,7 +17,6 @@ import infiniteinvo.core.InfiniteInvo;
 import infiniteinvo.core.InvoPacket;
 import infiniteinvo.inventory.BigContainerPlayer;
 import infiniteinvo.inventory.BigInventoryPlayer;
-import infiniteinvo.inventory.InventoryPersistProperty;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.gui.inventory.GuiContainer;
@@ -58,10 +57,6 @@ public class InfiniteInvoEventHandler
 		{
 			EntityPlayer player = (EntityPlayer)event.getEntity();
 			
-			if(InventoryPersistProperty.get(player) == null)
-			{
-				InventoryPersistProperty.Register(player);
-			}
 		}
 	}
 	
@@ -77,11 +72,6 @@ public class InfiniteInvoEventHandler
 		if(event.getEntity() instanceof EntityPlayer)
 		{
 			EntityPlayer player = (EntityPlayer)event.getEntity();
-			
-			if(InventoryPersistProperty.get(player) != null)
-			{
-				InventoryPersistProperty.get(player).onJoinWorld();
-			}
 			
 			if(event.getWorld().isRemote)
 			{
@@ -186,10 +176,6 @@ public class InfiniteInvoEventHandler
 				unlockCache.remove(event.getEntityLiving().getUniqueID().toString());
 			}
 			
-			if(!event.getEntityLiving().world.isRemote && event.getEntityLiving().world.getGameRules().getBoolean("keepInventory"))
-			{
-				InventoryPersistProperty.keepInvoCache.put(event.getEntityLiving().getUniqueID(), ((EntityPlayer)event.getEntityLiving()).inventory.writeToNBT(new NBTTagList()));
-			}
 		}
 	}
 	
@@ -298,7 +284,6 @@ public class InfiniteInvoEventHandler
 			
 			worldDir = null;
 			unlockCache.clear();
-			InventoryPersistProperty.keepInvoCache.clear();
 		}
 	}
 	

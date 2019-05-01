@@ -8,7 +8,6 @@ import infiniteinvo.core.InfiniteInvo;
 import infiniteinvo.core.InvoPacket;
 import infiniteinvo.inventory.BigContainerPlayer;
 import infiniteinvo.inventory.BigInventoryPlayer;
-import infiniteinvo.inventory.InventoryPersistProperty;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -57,11 +56,6 @@ public class EventHandler
 		if(event.getEntity() instanceof EntityPlayer)
 		{
 			EntityPlayer player = (EntityPlayer)event.getEntity();
-			
-			if(InventoryPersistProperty.get(player) == null)
-			{
-				InventoryPersistProperty.Register(player);
-			}
 		}
 	}
 	
@@ -71,11 +65,6 @@ public class EventHandler
 		if(event.getEntity() instanceof EntityPlayer)
 		{
 			EntityPlayer player = (EntityPlayer)event.getEntity();
-			
-			if(InventoryPersistProperty.get(player) != null)
-			{
-				InventoryPersistProperty.get(player).onJoinWorld();
-			}
 			
 			if(event.getWorld().isRemote)
 			{
@@ -178,11 +167,6 @@ public class EventHandler
 			{
 				unlockCache.remove(event.getEntityLiving().getCommandSenderEntity().getName());
 				unlockCache.remove(event.getEntityLiving().getUniqueID().toString());
-			}
-			
-			if(!event.getEntityLiving().world.isRemote && event.getEntityLiving().world.getGameRules().getBoolean("keepInventory"))
-			{
-				InventoryPersistProperty.keepInvoCache.put(event.getEntityLiving().getUniqueID(), ((EntityPlayer)event.getEntityLiving()).inventory.writeToNBT(new NBTTagList()));
 			}
 		}
 	}
@@ -292,7 +276,6 @@ public class EventHandler
 			
 			worldDir = null;
 			unlockCache.clear();
-			InventoryPersistProperty.keepInvoCache.clear();
 		}
 	}
 	
