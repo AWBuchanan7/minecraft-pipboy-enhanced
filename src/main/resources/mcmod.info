@@ -1,14 +1,14 @@
 [
 {
   "modid": "infiniteinvo",
-  "name": "InfiniteInvo",
-  "description": "Set your inventory as big as you like or at least until Java runs out of memory at ~2.14 BILLION SLOTS!",
-  "version": "${version}",
-  "mcversion": "${mcversion}",
+  "name": "Pipboy Enhanced",
+  "description": "An enhanced and Fallout-inspired inventory overhaul!",
+  "version": "1.0",
+  "mcversion": "1.7.10",
   "url": "",
   "updateUrl": "",
-  "authorList": ["Funwayguy","Bacon_Donut"],
-  "credits": "Thank's Siyliss siyLove",
+  "authorList": ["SuperSaix", "Funwayguy","Bacon_Donut"],
+  "credits": "",
   "logoFile": "title.png",
   "screenshots": [],
   "dependencies": []

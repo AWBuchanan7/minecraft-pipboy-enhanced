@@ -15,6 +15,7 @@ local.properties
 .classpath
 .settings/
 .loadpath
+.gradle/2.0/taskArtifacts/
 
 # External tool builders
 .externalToolBuilders/
